@@ -2,7 +2,7 @@
   "presets": ["env"],
   "plugins": [
     ["babel-plugin-root-import", {
-      "rootPathPrefix": "@",
+      "rootPathPrefix": "~",
       "rootPathSuffix": "lib"
     }],
     ["transform-object-rest-spread", {
