@@ -25,10 +25,9 @@ const value = {
   }
 };
 
-JsonPointer.get(value, "/foo/bar"); // 2
+const foobar = JsonPointer.get("/foo/bar");
+foobar(value); // 2
 JsonPointer.append("/foo", "bar"); // "/foo/bar"
-JsonPointer.cons("foo", JsonPointer.nil); // "/foo"
-JsonPointer.decons("/foo/bar"); // ["foo", "/bar"]
 ```
 
 Contributing
