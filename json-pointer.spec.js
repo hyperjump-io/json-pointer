@@ -1,5 +1,5 @@
-import { expect } from "chai";
-import * as JsonPointer from "~/json-pointer";
+const { expect } = require("chai");
+const JsonPointer = require("./json-pointer");
 
 
 describe("JsonPonter", () => {

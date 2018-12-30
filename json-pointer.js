@@ -1,6 +1,6 @@
-export const nil = "";
+const nil = "";
 
-export const get = (pointer) => {
+const get = (pointer) => {
   if (pointer.length > 0 && pointer[0] !== "/") {
     throw Error("Invalid JSON Pointer");
   }
@@ -12,7 +12,7 @@ export const get = (pointer) => {
   }, [value, ""])[0];
 };
 
-export const append = (pointer, segment) => pointer + "/" + escape(segment);
+const append = (pointer, segment) => pointer + "/" + escape(segment);
 
 const escape = (segment) => segment.toString().replace("~", "~0").replace("/", "~1");
 const unescape = (segment) => segment.toString().replace("~0", "~").replace("~1", "/");
@@ -26,3 +26,5 @@ const applySegment = (value, segment, pointer = "") => {
 
   return value[segment];
 };
+
+module.exports = { nil, get, append };

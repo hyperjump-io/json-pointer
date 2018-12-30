@@ -10,19 +10,13 @@
     "sourceType": "module"
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:import/errors",
-    "plugin:import/warnings"
+    "eslint:recommended"
   ],
-  "plugins": ["import"],
   "rules": {
     "array-bracket-spacing": ["error", "never"],
     "block-spacing": ["error", "always"],
     "brace-style": ["error", "1tbs"],
     "comma-dangle": ["error", "never"],
-    "import/extensions": ["error", "always", { "js": "never" }],
-    "import/newline-after-import": ["error", { "count": 2 }],
-    "import/no-commonjs": ["error"],
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
     "no-trailing-spaces": "error",
@@ -31,8 +25,5 @@
     "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double", { "allowTemplateLiterals": true }],
     "semi": ["error", "always"]
-  },
-  "settings": {
-    "import/resolver": "babel-plugin-root-import"
   }
 }
