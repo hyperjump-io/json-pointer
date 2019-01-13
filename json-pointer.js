@@ -1,18 +1,23 @@
+const curry = require("just-curry-it");
+
+
 const nil = "";
 
-const get = (pointer) => {
+const get = (pointer, value = undefined) => {
   if (pointer.length > 0 && pointer[0] !== "/") {
     throw Error("Invalid JSON Pointer");
   }
 
   const ptr = pointer.split("/").slice(1).map(unescape);
 
-  return (value) => ptr.reduce(([value, pointer], segment) => {
-    return [applySegment(value, segment, pointer), append(pointer, segment)];
+  const fn = (value) => ptr.reduce(([value, pointer], segment) => {
+    return [applySegment(value, segment, pointer), append(segment, pointer)];
   }, [value, ""])[0];
+
+  return value === undefined ? fn : fn(value);
 };
 
-const append = (pointer, segment) => pointer + "/" + escape(segment);
+const append = curry((segment, pointer) => pointer + "/" + escape(segment));
 
 const escape = (segment) => segment.toString().replace("~", "~0").replace("/", "~1");
 const unescape = (segment) => segment.toString().replace("~0", "~").replace("~1", "/");
