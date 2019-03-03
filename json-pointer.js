@@ -19,8 +19,8 @@ const get = (pointer, value = undefined) => {
 
 const append = curry((segment, pointer) => pointer + "/" + escape(segment));
 
-const escape = (segment) => segment.toString().replace("~", "~0").replace("/", "~1");
-const unescape = (segment) => segment.toString().replace("~0", "~").replace("~1", "/");
+const escape = (segment) => segment.toString().replace(/~/g, "~0").replace(/\//g, "~1");
+const unescape = (segment) => segment.toString().replace(/~0/g, "~").replace(/~1/g, "/");
 
 const applySegment = (value, segment, pointer = "") => {
   if (value === null || typeof value !== "object") {
