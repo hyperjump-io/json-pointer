@@ -35,7 +35,7 @@ getFooBar(value); // 42
 
 // Set value from pointer
 const setFooBar = JsonPointer.set(fooBarPointer);
-getFooBar(value, 33); // 33
+setFooBar(value, 33); // 33
 ```
 
 Contributing
