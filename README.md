@@ -34,8 +34,14 @@ const getFooBar = JsonPointer.get(fooBarPointer);
 getFooBar(value); // 42
 
 // Set value from pointer
+// New value is returned without modifying the original
 const setFooBar = JsonPointer.set(fooBarPointer);
-setFooBar(value, 33); // 33
+setFooBar(value, 33); // { "foo": { "bar": 33 } }
+
+// Mutate value from pointer
+// The original value is changed and no value is returned
+const mutateFooBar = JsonPointer.mutate(fooBarPointer);
+mutateFooBar(value, 33); // { "foo": { "bar": 33 } }
 ```
 
 Contributing
