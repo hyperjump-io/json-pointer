@@ -29,19 +29,24 @@ const value = {
 const fooPointer = JsonPointer.append(JsonPointer.nil, "foo"); // "/foo"
 const fooBarPointer = JsonPointer.append(fooPointer, "bar"); // "/foo/bar"
 
-// Get value from pointer
+// Get a value from a pointer
 const getFooBar = JsonPointer.get(fooBarPointer);
 getFooBar(value); // 42
 
-// Set value from pointer
+// Set a value from a pointer
 // New value is returned without modifying the original
 const setFooBar = JsonPointer.set(fooBarPointer);
 setFooBar(value, 33); // { "foo": { "bar": 33 } }
 
-// Mutate value from pointer
+// Mutate a value from a pointer
 // The original value is changed and no value is returned
 const mutateFooBar = JsonPointer.mutate(fooBarPointer);
 mutateFooBar(value, 33); // { "foo": { "bar": 33 } }
+
+// Delete a value from a pointer
+// New value is returned without modifying the original
+const deleteFooBar = JsonPointer.unset(fooBarPointer);
+setFooBar(value); // { "foo": {} }
 ```
 
 Contributing
