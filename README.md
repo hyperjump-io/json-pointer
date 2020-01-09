@@ -43,9 +43,14 @@ setFooBar(value, 33); // { "foo": { "bar": 33 } }
 const mutateFooBar = JsonPointer.mutate(fooBarPointer);
 mutateFooBar(value, 33); // { "foo": { "bar": 33 } }
 
-// Delete a value from a pointer
+// Unset a value from a pointer
 // New value is returned without modifying the original
 const deleteFooBar = JsonPointer.unset(fooBarPointer);
+setFooBar(value); // { "foo": {} }
+
+// Delete a value from a pointer
+// New value is returned without modifying the original
+const deleteFooBar = JsonPointer.delete(fooBarPointer);
 setFooBar(value); // { "foo": {} }
 ```
 
