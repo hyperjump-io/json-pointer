@@ -45,11 +45,11 @@ assignFooBar(value, 33); // { "foo": { "bar": 33 } }
 
 // Unset a value from a pointer
 // New value is returned without modifying the original
-const deleteFooBar = JsonPointer.unset(fooBarPointer);
+const unsetFooBar = JsonPointer.unset(fooBarPointer);
 setFooBar(value); // { "foo": {} }
 
 // Delete a value from a pointer
-// New value is returned without modifying the original
+// The original value is changed and no value is returned
 const deleteFooBar = JsonPointer.delete(fooBarPointer);
 setFooBar(value); // { "foo": {} }
 ```
