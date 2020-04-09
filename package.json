@@ -5,7 +5,7 @@
   "main": "lib/json-pointer.js",
   "scripts": {
     "clean": "xargs -a .gitignore rm -rf",
-    "lint": "eslint .",
+    "lint": "eslint lib",
     "test": "mocha 'lib/**/*.spec.js'"
   },
   "repository": "github:jdesrosiers/json-pointer",
@@ -19,7 +19,7 @@
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "eslint-import-resolver-node": "^0.3.2",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-import": "^2.20.2",
     "mocha": "^5.2.0"
   },
   "dependencies": {
