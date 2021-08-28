@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "xargs -a .gitignore rm -rf",
     "lint": "eslint lib",
-    "test": "mocha 'lib/**/*.spec.js'"
+    "test": "mocha 'lib/**/*.spec.js'",
+    "build": "rollup --config rollup.config.js",
+    "prepublishOnly": "npm run build"
   },
   "repository": "github:hyperjump-io/json-pointer",
   "keywords": [
@@ -20,11 +22,15 @@
     "url": "https://github.com/sponsors/jdesrosiers"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
     "chai": "^4.3.4",
     "eslint": "^7.32.0",
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-plugin-import": "^2.24.2",
-    "mocha": "^9.1.1"
+    "mocha": "^9.1.1",
+    "rollup": "^2.56.3",
+    "rollup-plugin-terser": "^7.0.2"
   },
   "dependencies": {
     "just-curry-it": "^3.2.1"
