@@ -1,6 +1,6 @@
-const { expect } = require("chai");
-const { Given, When, Then } = require("./mocha-gherkin.spec");
-const JsonPointer = require("./json-pointer");
+import { expect } from "chai";
+import { Given, When, Then } from "./mocha-gherkin.spec";
+import JsonPointer, { Json, JsonObject, Pointable } from ".";
 
 
 describe("JsonPointer.assign", () => {
@@ -8,11 +8,11 @@ describe("JsonPointer.assign", () => {
     const pointer = JsonPointer.nil;
 
     When("mutating any value", () => {
-      const subject = "anything";
+      const subject = { foo: "bar" };
       JsonPointer.assign(pointer, subject, "foo");
 
       Then("the value is not changed", () => {
-        expect(subject).to.equal("anything");
+        expect(subject).to.eql({ "foo": "bar" });
       });
     });
   });
@@ -57,7 +57,7 @@ describe("JsonPointer.assign", () => {
   });
 
   Given("an object", () => {
-    let subject;
+    let subject: JsonObject;
 
     beforeEach(() => {
       subject = { aaa: { bbb: {} } };
@@ -83,7 +83,7 @@ describe("JsonPointer.assign", () => {
   });
 
   Given("an array", () => {
-    let subject;
+    let subject: Json[];
 
     beforeEach(() => {
       subject = [];
@@ -111,7 +111,7 @@ describe("JsonPointer.assign", () => {
   });
 
   Given("a number", () => {
-    let subject;
+    let subject: unknown;
 
     beforeEach(() => {
       subject = 42;
@@ -121,13 +121,13 @@ describe("JsonPointer.assign", () => {
       const assign = JsonPointer.assign("/0");
 
       Then("an error should be thrown", () => {
-        expect(() => assign(subject, "foo")).to.throw(Error, "Value at '' is a number and does not have property '0'");
+        expect(() => assign(subject as Pointable, "foo")).to.throw(Error, "Value at '' is a number and does not have property '0'");
       });
     });
   });
 
   Given("a string", () => {
-    let subject;
+    let subject: unknown;
 
     beforeEach(() => {
       subject = "foo";
@@ -137,13 +137,13 @@ describe("JsonPointer.assign", () => {
       const assign = JsonPointer.assign("/0");
 
       Then("an error should be thrown", () => {
-        expect(() => assign(subject, "foo")).to.throw(Error, "Value at '' is a string and does not have property '0'");
+        expect(() => assign(subject as Pointable, "foo")).to.throw(Error, "Value at '' is a string and does not have property '0'");
       });
     });
   });
 
   Given("null", () => {
-    let subject;
+    let subject: unknown;
 
     beforeEach(() => {
       subject = null;
@@ -153,7 +153,7 @@ describe("JsonPointer.assign", () => {
       const assign = JsonPointer.assign("/0");
 
       Then("an error should be thrown", () => {
-        expect(() => assign(subject, "foo")).to.throw(Error, "Value at '' is null and does not have property '0'");
+        expect(() => assign(subject as Pointable, "foo")).to.throw(Error, "Value at '' is null and does not have property '0'");
       });
     });
   });

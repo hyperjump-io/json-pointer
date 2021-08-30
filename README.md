@@ -8,6 +8,8 @@ the JSON document.
 
 Installation
 ------------
+Includes support for node.js JavaScript (CommonJS and ES Modules), TypeScript,
+and browsers.
 
 ```bash
 npm install @hyperjump/json-pointer
@@ -50,8 +52,8 @@ setFooBar(value); // { "foo": {} }
 
 // Delete a value from a pointer
 // The original value is changed and no value is returned
-const deleteFooBar = JsonPointer.delete(fooBarPointer);
-setFooBar(value); // { "foo": {} }
+const deleteFooBar = JsonPointer.remove(fooBarPointer);
+deleteFooBar(value); // { "foo": {} }
 ```
 
 Contributing

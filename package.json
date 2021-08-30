@@ -2,11 +2,15 @@
   "name": "@hyperjump/json-pointer",
   "version": "0.8.0",
   "description": "An RFC-6901 JSON Pointer implementation",
-  "main": "lib/json-pointer.js",
+  "main": "lib/index.js",
+  "exports": {
+    "require": "./lib/index.js",
+    "import": "./lib/index.mjs"
+  },
   "scripts": {
     "clean": "xargs -a .gitignore rm -rf",
     "lint": "eslint lib",
-    "test": "mocha 'lib/**/*.spec.js'",
+    "test": "mocha --require ts-node/register 'lib/**/*.spec.ts'",
     "build": "rollup --config rollup.config.js",
     "prepublishOnly": "npm run build"
   },
@@ -24,13 +28,20 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^20.0.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^9.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
     "chai": "^4.3.4",
     "eslint": "^7.32.0",
     "eslint-import-resolver-node": "^0.3.6",
+    "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.24.2",
     "mocha": "^9.1.1",
     "rollup": "^2.56.3",
-    "rollup-plugin-terser": "^7.0.2"
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
   },
   "dependencies": {
     "just-curry-it": "^3.2.1"

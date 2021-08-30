@@ -12,7 +12,7 @@ const minify = [false, true];
 const config = combinations(formats, minify);
 
 module.exports = config.map(([format, minify]) => ({
-  input: "lib/json-pointer.js",
+  input: "lib/index.js",
   output: {
     format: format,
     file: `dist/json-pointer-${format}${minify ? ".min" : ""}.js`,

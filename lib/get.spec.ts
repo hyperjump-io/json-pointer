@@ -1,5 +1,5 @@
-const { expect } = require("chai");
-const JsonPointer = require("./json-pointer");
+import { expect } from "chai";
+import JsonPointer, { Getter } from ".";
 
 
 describe("JsonPointer", () => {
@@ -23,7 +23,7 @@ describe("JsonPointer", () => {
   };
 
   describe("get", () => {
-    [
+    const tests: [string, unknown][] = [
       ["", subject],
       ["/foo", ["bar", "baz"]],
       ["/foo/0", "bar"],
@@ -46,9 +46,10 @@ describe("JsonPointer", () => {
       ["/foo/2", undefined],
       ["/foo/-", undefined],
       ["/0", undefined]
-    ].forEach(([pointer, expected]) => {
+    ];
+    tests.forEach(([pointer, expected]) => {
       describe(JSON.stringify(pointer), () => {
-        let ptr;
+        let ptr: Getter;
 
         beforeEach(() => {
           ptr = JsonPointer.get(pointer);

@@ -1,6 +1,6 @@
-const { expect } = require("chai");
-const { Given, When, Then } = require("./mocha-gherkin.spec");
-const JsonPointer = require("./json-pointer");
+import { expect } from "chai";
+import { Given, When, Then } from "./mocha-gherkin.spec";
+import JsonPointer, { Json, JsonObject, Pointable } from ".";
 
 
 describe("JsonPointer.unset", () => {
@@ -8,7 +8,7 @@ describe("JsonPointer.unset", () => {
     const pointer = JsonPointer.nil;
 
     When("deleting any value", () => {
-      const subject = "anything";
+      const subject = { foo: "bar" };
       const result = JsonPointer.unset(pointer, subject);
 
       Then("the value is undefined", () => {
@@ -16,7 +16,7 @@ describe("JsonPointer.unset", () => {
       });
 
       Then("the original value should not change", () => {
-        expect(subject).to.equal("anything");
+        expect(subject).to.eql({ foo: "bar" });
       });
     });
   });
@@ -49,7 +49,7 @@ describe("JsonPointer.unset", () => {
       const subject = [111, []];
       const result = JsonPointer.unset(pointer, subject);
 
-      Then("the value should be deleted", () => {
+      Then("the value should be removed", () => {
         expect(result).to.eql([[]]);
       });
 
@@ -86,14 +86,14 @@ describe("JsonPointer.unset", () => {
   });
 
   Given("an object", () => {
-    let subject;
+    let subject: JsonObject;
 
     beforeEach(() => {
       subject = { aaa: { bbb: {} } };
     });
 
     When("deleting a value that doesn't exist", () => {
-      let result;
+      let result: JsonObject;
       beforeEach(() => {
         result = JsonPointer.unset("/bbb", subject);
       });
@@ -111,20 +111,21 @@ describe("JsonPointer.unset", () => {
       const unset = JsonPointer.unset("/aaa/ccc/bbb");
 
       Then("an error should be thrown", () => {
-        expect(() => unset(subject, "foo")).to.throw(Error, "Value at '/aaa/ccc' is undefined and does not have property 'bbb'");
+        expect(() => unset(subject)).to.throw(Error, "Value at '/aaa/ccc' is undefined and does not have property 'bbb'");
       });
     });
   });
 
   Given("an array", () => {
-    let subject;
+    let subject: Json[];
 
     beforeEach(() => {
       subject = [];
     });
 
     When("deleting a value that doesn't exist", () => {
-      let result;
+      let result: Json[];
+
       beforeEach(() => {
         result = JsonPointer.unset("/0", subject);
       });
@@ -135,7 +136,7 @@ describe("JsonPointer.unset", () => {
     });
 
     When("deleting past the end of the array", () => {
-      let result;
+      let result: Json[];
 
       beforeEach(() => {
         result = JsonPointer.unset("/-", subject);
@@ -148,7 +149,7 @@ describe("JsonPointer.unset", () => {
   });
 
   Given("a number", () => {
-    let subject;
+    let subject: unknown;
 
     beforeEach(() => {
       subject = 42;
@@ -158,13 +159,13 @@ describe("JsonPointer.unset", () => {
       const unset = JsonPointer.unset("/0");
 
       Then("an error should be thrown", () => {
-        expect(() => unset(subject)).to.throw(Error, "Value at '' is a number and does not have property '0'");
+        expect(() => unset(subject as Pointable)).to.throw(Error, "Value at '' is a number and does not have property '0'");
       });
     });
   });
 
   Given("a string", () => {
-    let subject;
+    let subject: unknown;
 
     beforeEach(() => {
       subject = "foo";
@@ -174,13 +175,13 @@ describe("JsonPointer.unset", () => {
       const unset = JsonPointer.unset("/0");
 
       Then("an error should be thrown", () => {
-        expect(() => unset(subject)).to.throw(Error, "Value at '' is a string and does not have property '0'");
+        expect(() => unset(subject as Pointable)).to.throw(Error, "Value at '' is a string and does not have property '0'");
       });
     });
   });
 
   Given("null", () => {
-    let subject;
+    let subject: unknown;
 
     beforeEach(() => {
       subject = null;
@@ -190,7 +191,7 @@ describe("JsonPointer.unset", () => {
       const unset = JsonPointer.unset("/0");
 
       Then("an error should be thrown", () => {
-        expect(() => unset(subject)).to.throw(Error, "Value at '' is null and does not have property '0'");
+        expect(() => unset(subject as Pointable)).to.throw(Error, "Value at '' is null and does not have property '0'");
       });
     });
   });
