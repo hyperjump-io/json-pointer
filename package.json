@@ -27,25 +27,25 @@
     "url": "https://github.com/sponsors/jdesrosiers"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^20.0.0",
-    "@rollup/plugin-node-resolve": "^13.0.4",
-    "@types/chai": "^4.2.21",
-    "@types/mocha": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^4.29.3",
-    "@typescript-eslint/parser": "^4.29.3",
-    "chai": "^4.3.4",
-    "eslint": "^7.32.0",
-    "eslint-import-resolver-node": "^0.3.6",
-    "eslint-import-resolver-typescript": "^2.4.0",
-    "eslint-plugin-import": "^2.24.2",
-    "mocha": "^9.1.1",
-    "rimraf": "^3.0.2",
-    "rollup": "^2.56.3",
-    "rollup-plugin-terser": "^7.0.2",
-    "ts-node": "^10.2.1",
-    "typescript": "^4.4.2"
+    "@rollup/plugin-commonjs": "*",
+    "@rollup/plugin-node-resolve": "*",
+    "@types/chai": "*",
+    "@types/mocha": "*",
+    "@typescript-eslint/eslint-plugin": "*",
+    "@typescript-eslint/parser": "*",
+    "chai": "*",
+    "eslint": "*",
+    "eslint-import-resolver-node": "*",
+    "eslint-import-resolver-typescript": "*",
+    "eslint-plugin-import": "*",
+    "mocha": "*",
+    "rimraf": "*",
+    "rollup": "*",
+    "rollup-plugin-terser": "*",
+    "ts-node": "*",
+    "typescript": "*"
   },
   "dependencies": {
-    "just-curry-it": "^3.2.1"
+    "just-curry-it": "^5.2.1"
   }
 }

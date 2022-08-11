@@ -85,6 +85,28 @@ describe("JsonPointer.set", () => {
     });
   });
 
+  Given("a pointer to a nested item of an array", () => {
+    const pointer = "/0/1";
+
+    When("setting an item", () => {
+      const subject: [number[], number] = [[333, 444], 222];
+      const result = JsonPointer.set(pointer, subject, 555);
+
+      Then("the new value should be set", () => {
+        expect(result[0][1]).to.equal(555);
+      });
+
+      Then("the original value should not change", () => {
+        expect(subject[0][1]).to.equal(444);
+      });
+
+      Then("the other properties should not change", () => {
+        expect(result[1]).to.equal(subject[1]);
+        expect(result[0][0]).to.equal(subject[0][0]);
+      });
+    });
+  });
+
   Given("an object", () => {
     let subject: JsonObject;
 
