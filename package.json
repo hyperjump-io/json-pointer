@@ -1,6 +1,6 @@
 {
   "name": "@hyperjump/json-pointer",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "An RFC-6901 JSON Pointer implementation",
   "main": "lib/index.js",
   "exports": {
