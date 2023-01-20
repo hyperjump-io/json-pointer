@@ -19,7 +19,7 @@
     "import/no-unresolved": ["error", { "commonjs": true }],
     "import/extensions": ["error", "always", { "js": "never" }],
     "import/newline-after-import": ["error", { "count": 2 }],
-    "indent": ["error", 2],
+    "indent": ["error", 2, { "ignoreComments": true }],
     "linebreak-style": ["error", "unix"],
     "no-trailing-spaces": "error",
     "no-tabs": "error",
