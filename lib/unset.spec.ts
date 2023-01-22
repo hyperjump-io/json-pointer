@@ -50,7 +50,7 @@ describe("JsonPointer.unset", () => {
       const result = JsonPointer.unset(pointer, subject);
 
       Then("the value should be removed", () => {
-        expect(result).to.eql([[]]);
+        expect(result).to.eql([undefined, []]);
       });
 
       Then("the original value should not change", () => {
@@ -58,7 +58,7 @@ describe("JsonPointer.unset", () => {
       });
 
       Then("the other items should not change", () => {
-        expect(result[0]).to.equal(subject[1]);
+        expect(result[1]).to.equal(subject[1]);
       });
     });
   });

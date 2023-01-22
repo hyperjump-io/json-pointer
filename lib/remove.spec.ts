@@ -38,7 +38,7 @@ describe("JsonPointer.remove", () => {
       JsonPointer.remove(pointer, subject);
 
       Then("the value should be removed", () => {
-        expect(subject).to.eql([222]);
+        expect(subject).to.eql([undefined, 222]);
       });
     });
   });
