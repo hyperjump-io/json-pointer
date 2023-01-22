@@ -3,11 +3,8 @@
   "version": "1.0.0",
   "description": "An RFC-6901 JSON Pointer implementation",
   "type": "module",
-  "main": "lib/index.js",
-  "exports": {
-    "require": "./lib/index.js",
-    "import": "./lib/index.mjs"
-  },
+  "main": "./lib/index.js",
+  "exports": "./lib/index.js",
   "scripts": {
     "clean": "xargs -a .gitignore rm -rf",
     "lint": "eslint lib",
