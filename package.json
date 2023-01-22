@@ -2,6 +2,7 @@
   "name": "@hyperjump/json-pointer",
   "version": "0.9.8",
   "description": "An RFC-6901 JSON Pointer implementation",
+  "type": "module",
   "main": "lib/index.js",
   "exports": {
     "require": "./lib/index.js",
@@ -10,10 +11,7 @@
   "scripts": {
     "clean": "xargs -a .gitignore rm -rf",
     "lint": "eslint lib",
-    "test": "mocha --require ts-node/register 'lib/**/*.spec.ts'",
-    "build": "rollup --config rollup.config.js",
-    "prepublishOnly": "npm run build",
-    "postinstall": "node -e \"require('fs').rmSync('dist', { recursive: true })\""
+    "test": "mocha 'lib/**/*.spec.ts'"
   },
   "repository": "github:hyperjump-io/json-pointer",
   "keywords": [
@@ -27,8 +25,6 @@
     "url": "https://github.com/sponsors/jdesrosiers"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "*",
-    "@rollup/plugin-node-resolve": "*",
     "@types/chai": "*",
     "@types/mocha": "*",
     "@typescript-eslint/eslint-plugin": "*",
@@ -39,9 +35,6 @@
     "eslint-import-resolver-typescript": "*",
     "eslint-plugin-import": "*",
     "mocha": "*",
-    "rimraf": "*",
-    "rollup": "*",
-    "rollup-plugin-terser": "*",
     "ts-node": "*",
     "typescript": "*"
   },

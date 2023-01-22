@@ -1,36 +1,34 @@
-export type JsonPointer = {
-  nil: "";
-  append: (
+export const nil: "";
+export const append: (
     (segment: string, pointer: string) => string
   ) & (
     (segment: string) => (pointer: string) => string
   );
-  get: (
+export const get: (
     (pointer: string, subject: Pointable) => unknown
   ) & (
     (pointer: string) => Getter
   );
-  set: (
+export const set: (
     <A extends Pointable>(pointer: string, subject: A, value: unknown) => A
   ) & (
     (pointer: string) => Setter
   );
-  assign: (
+export const assign: (
     <A extends Pointable>(pointer: string, subject: A, value: unknown) => void
   ) & (
     (pointer: string) => Assigner
   );
-  unset: (
+export const unset: (
     <A extends Pointable>(pointer: string, subject: A) => A
   ) & (
     (pointer: string) => Unsetter
   );
-  remove: (
+export const remove: (
     (pointer: string, subject: Pointable) => void
   ) & (
     (pointer: string) => Remover
   );
-}
 
 export type Getter = (subject: Pointable) => unknown;
 export type Setter = (
@@ -52,14 +50,3 @@ export type JsonObject = {
 };
 
 export type Pointable = JsonObject | Json[];
-
-declare const JsonPointer: JsonPointer;
-export const nil: JsonPointer["nil"];
-export const append: JsonPointer["append"];
-export const get: JsonPointer["get"];
-export const set: JsonPointer["set"];
-export const assign: JsonPointer["assign"];
-export const unset: JsonPointer["unset"];
-export const remove: JsonPointer["remove"];
-
-export default JsonPointer;

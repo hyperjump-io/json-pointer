@@ -1,4 +1,4 @@
-rollup.config.js
 .eslintrc.json
+.mocharc.json
 **/*.spec.ts
 tsconfig.json

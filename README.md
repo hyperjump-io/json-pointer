@@ -8,8 +8,7 @@ the JSON document.
 
 Installation
 ------------
-Includes support for node.js JavaScript (CommonJS and ES Modules), TypeScript,
-and browsers.
+Includes support for node.js (ES Modules, TypeScript) and browsers.
 
 ```bash
 npm install @hyperjump/json-pointer

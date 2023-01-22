@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import JsonPointer from ".";
+import * as JsonPointer from "./index.js";
 
 
 describe("append", () => {

@@ -1,5 +1,6 @@
 import { expect } from "chai";
-import JsonPointer, { Getter } from ".";
+import * as JsonPointer from "./index.js";
+import type { Getter } from "./index.js";
 
 
 describe("JsonPointer", () => {
