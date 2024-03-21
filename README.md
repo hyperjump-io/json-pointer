@@ -18,7 +18,7 @@ Usage
 -----
 
 ```javascript
-const JsonPointer = require("@hyperjump/json-pointer");
+import * as JsonPointer from "@hyperjump/json-pointer";
 
 const value = {
   "foo": {
@@ -27,7 +27,7 @@ const value = {
 };
 
 // Construct pointers
-const fooPointer = JsonPointer.append(JsonPointer.nil, "foo"); // "/foo"
+const fooPointer = JsonPointer.append("foo", JsonPointer.nil); // "/foo"
 const fooBarPointer = JsonPointer.append(fooPointer, "bar"); // "/foo/bar"
 
 // Get a value from a pointer
