@@ -1,4 +1,4 @@
 .eslintrc.json
-.mocharc.json
 **/*.spec.ts
+lib/gherkin.ts
 tsconfig.json
