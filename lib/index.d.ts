@@ -1,4 +1,5 @@
 export const nil: "";
+export const pointerSegments: (pointer: string) => Generator<string>;
 export const append: (
     (segment: string, pointer: string) => string
   ) & (
