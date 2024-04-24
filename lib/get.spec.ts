@@ -1,4 +1,4 @@
-import { expect } from "chai";
+import { beforeEach, describe, expect, test } from "vitest";
 import * as JsonPointer from "./index.js";
 import type { Getter } from "./index.js";
 
@@ -56,7 +56,7 @@ describe("JsonPointer", () => {
           ptr = JsonPointer.get(pointer);
         });
 
-        it(`should equal ${JSON.stringify(expected)}`, () => {
+        test(`should equal ${JSON.stringify(expected)}`, () => {
           expect(ptr(subject)).to.eql(expected);
         });
       });
@@ -64,28 +64,28 @@ describe("JsonPointer", () => {
   });
 
   describe("indexing into a number", () => {
-    it("should throw an error", () => {
+    test("should throw an error", () => {
       const ptr = JsonPointer.get("//foo");
       expect(() => ptr(subject)).to.throw(Error, "Value at '/' is a number and does not have property 'foo'");
     });
   });
 
   describe("indexing into a string", () => {
-    it("should throw an error", () => {
+    test("should throw an error", () => {
       const ptr = JsonPointer.get("/foo/0/0");
       expect(() => ptr(subject)).to.throw(Error, "Value at '/foo/0' is a string and does not have property '0'");
     });
   });
 
   describe("indexing into a null", () => {
-    it("should throw an error", () => {
+    test("should throw an error", () => {
       const ptr = JsonPointer.get("/aaa/0");
       expect(() => ptr(subject)).to.throw(Error, "Value at '/aaa' is null and does not have property '0'");
     });
   });
 
   describe("a pointer that doesn't start with '/'", () => {
-    it("should throw an error", () => {
+    test("should throw an error", () => {
       expect(() => JsonPointer.get("foo")).to.throw(Error, "Invalid JSON Pointer");
     });
   });

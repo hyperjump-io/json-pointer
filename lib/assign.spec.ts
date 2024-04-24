@@ -1,5 +1,5 @@
-import { expect } from "chai";
-import { Given, When, Then } from "./mocha-gherkin.spec.js";
+import { beforeEach, describe, expect } from "vitest";
+import { Given, When, Then } from "./gherkin.js";
 import * as JsonPointer from "./index.js";
 import type { Json, JsonObject, Pointable } from "./index.js";
 
