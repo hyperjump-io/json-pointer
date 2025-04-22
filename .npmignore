@@ -1,4 +1,5 @@
-.eslintrc.json
-**/*.spec.ts
-lib/gherkin.ts
+.github/
+eslint.config.js
+**/*.test.js
+lib/gherkin.js
 tsconfig.json
