@@ -1,14 +1,13 @@
 import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
-// @ts-expect-error No types available
 import importPlugin from "eslint-plugin-import";
 
 
 export default tseslint.config(
   ...tseslint.configs.recommendedTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  importPlugin.flatConfigs.recommended, // eslint-disable-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-  importPlugin.flatConfigs.typescript, // eslint-disable-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+  importPlugin.flatConfigs.recommended,
+  importPlugin.flatConfigs.typescript,
   stylistic.configs.customize({
     arrowParens: true,
     braceStyle: "1tbs",
