@@ -1,6 +1,8 @@
 import tseslint from "typescript-eslint";
 import stylistic from "@stylistic/eslint-plugin";
 import importPlugin from "eslint-plugin-import";
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
 
 
 export default tseslint.config(
@@ -20,7 +22,7 @@ export default tseslint.config(
     languageOptions: {
       parserOptions: {
         projectService: true,
-        tsconfigRootDir: import.meta.dirname
+        tsconfigRootDir: dirname(fileURLToPath(import.meta.url))
       }
     },
     settings: {
