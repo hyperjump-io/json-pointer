@@ -33,6 +33,8 @@ and
 [`@hyperjump/browser`](https://github.com/hyperjump-io/browser/blob/v2/website/README.md)
 are built on it.
 
+Using v1? [Migrating from v1](migrating.md) lists what changed.
+
 ## Contents
 
 - [Install](install.md): Node.js, browsers, and TypeScript
@@ -42,3 +44,4 @@ are built on it.
   isn't there
 - [Changing values](changing-values.md): `set`, `assign`, `unset`, and
   `remove`
+- [Migrating from v1](migrating.md): what changed, and what to do about it
