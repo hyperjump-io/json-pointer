@@ -37,7 +37,7 @@ you, so you only see escapes in pointers written by hand.
 `append(segment, pointer)` adds a segment to the end of a pointer, escaping
 it. The segment comes first, then the pointer it's added to.
 
-```javascript
+```typescript
 const foo = JsonPointer.append("foo", JsonPointer.nil); // "/foo"
 const item = JsonPointer.append("0", foo); // "/foo/0"
 JsonPointer.append("a/b", JsonPointer.nil); // "/a~1b"
@@ -45,7 +45,7 @@ JsonPointer.append("a/b", JsonPointer.nil); // "/a~1b"
 
 To build a pointer from a list of segments, start from `nil`:
 
-```javascript
+```typescript
 const pointer = ["foo", "a/b", "0"].reduce(
   (pointer, segment) => JsonPointer.append(segment, pointer),
   JsonPointer.nil
@@ -57,7 +57,7 @@ pointer; // "/foo/a~1b/0"
 
 `pointerSegments(pointer)` iterates over a pointer's segments, unescaped.
 
-```javascript
+```typescript
 [...JsonPointer.pointerSegments("/foo/a~1b/0")]; // ["foo", "a/b", "0"]
 [...JsonPointer.pointerSegments(JsonPointer.nil)]; // []
 ```
@@ -71,7 +71,7 @@ has a `~` that isn't followed by `0` or `1`. Every function that takes a
 pointer throws an `Error` with the message `Invalid JSON Pointer` for one.
 `pointerSegments` throws when you start iterating.
 
-```javascript
+```typescript
 JsonPointer.get("foo", doc); // throws: no leading "/"
 JsonPointer.get("/a~b", doc); // throws: "~" must be "~0" or "~1"
 ```
@@ -84,7 +84,7 @@ aren't allowed in a fragment, like spaces and `%`, are percent-encoded, as
 RFC 6901 describes. This package works with pointers, not URIs, so decode a
 fragment before using it:
 
-```javascript
+```typescript
 const url = new URL("https://example.com/doc.json#/first%20name");
 const pointer = decodeURIComponent(url.hash.slice(1)); // "/first name"
 JsonPointer.get(pointer, doc);

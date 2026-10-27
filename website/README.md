@@ -6,7 +6,7 @@ Pointer is a string, like `/foo/0/bar`, that identifies one value in a JSON
 document. This package gets values by pointer, sets and removes them, and
 builds and splits pointers so you never escape them by hand.
 
-```javascript
+```typescript
 import * as JsonPointer from "@hyperjump/json-pointer";
 
 const doc = { foo: { bar: 42 } };

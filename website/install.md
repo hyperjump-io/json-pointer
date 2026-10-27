@@ -7,7 +7,7 @@ npm install @hyperjump/json-pointer
 It's an ES module with no dependencies, and it works the same in Node.js
 and browsers. Import it as a namespace:
 
-```javascript
+```typescript
 import * as JsonPointer from "@hyperjump/json-pointer";
 ```
 

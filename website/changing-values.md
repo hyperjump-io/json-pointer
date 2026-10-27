@@ -12,7 +12,7 @@ leave the original alone, or change the original in place.
 
 `set` returns a new value with the value set. `subject` isn't changed.
 
-```javascript
+```typescript
 const doc = {
   name: "Ada",
   address: { city: "London" },
@@ -27,7 +27,7 @@ doc.address.city; // "London"
 Only the objects and arrays on the way to the value are copied. Everything
 else is shared with `subject`:
 
-```javascript
+```typescript
 moved === doc; // false
 moved.address === doc.address; // false
 moved.languages === doc.languages; // true
@@ -39,7 +39,7 @@ in place.
 
 `assign` sets the value in place, and returns nothing.
 
-```javascript
+```typescript
 JsonPointer.assign("/address/city", doc, "Paris");
 doc.address.city; // "Paris"
 ```
@@ -53,7 +53,7 @@ has to exist, though. Neither creates the objects on the way, so
 `unset` returns a new value without the value. Like `set`, it copies only
 what's on the way to the value, and `subject` isn't changed.
 
-```javascript
+```typescript
 const unlisted = JsonPointer.unset("/address", doc);
 "address" in unlisted; // false
 "address" in doc; // true
@@ -61,7 +61,7 @@ const unlisted = JsonPointer.unset("/address", doc);
 
 `remove` removes the value in place, and returns nothing.
 
-```javascript
+```typescript
 JsonPointer.remove("/address", doc);
 "address" in doc; // false
 ```
@@ -75,7 +75,7 @@ A segment that steps into an array is an index, and setting it replaces
 that item. The segment `-` is the position after the last item, so setting
 it adds an item to the end.
 
-```javascript
+```typescript
 const more = JsonPointer.set("/languages/-", doc, "Greek");
 more.languages; // ["English", "French", "Greek"]
 ```
@@ -87,7 +87,7 @@ Removing an item doesn't move the items after it, so the array keeps its
 length and has an empty slot where the item was. `JSON.stringify` writes
 an empty slot as `null`.
 
-```javascript
+```typescript
 const fewer = JsonPointer.unset("/languages/0", doc);
 fewer.languages.length; // 2
 JSON.stringify(fewer.languages); // '[null,"French"]'
@@ -95,7 +95,7 @@ JSON.stringify(fewer.languages); // '[null,"French"]'
 
 To take an item out and move the rest up, set the array to one without it:
 
-```javascript
+```typescript
 const languages = JsonPointer.get("/languages", doc);
 const shifted = JsonPointer.set(
   "/languages",
@@ -117,7 +117,7 @@ Like `get`, each function takes just a pointer and returns a function that
 takes the rest of the arguments. The pointer is parsed once, the first time
 the function is used.
 
-```javascript
+```typescript
 const addLanguage = JsonPointer.set("/languages/-");
 
 const ada = { languages: ["English"] };

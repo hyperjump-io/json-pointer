@@ -3,7 +3,7 @@
 `get(pointer, subject)` returns the value the pointer identifies in
 `subject`.
 
-```javascript
+```typescript
 const doc = {
   name: "Ada",
   languages: ["English", "French"]
@@ -23,7 +23,7 @@ Give `get` just a pointer, and it returns a function that takes the
 subject. The pointer is parsed once, however many times you use the
 function.
 
-```javascript
+```typescript
 const getName = JsonPointer.get("/name");
 
 const people = [{ name: "Ada" }, { name: "Grace" }];
@@ -39,7 +39,7 @@ If the last segment names a property or item that doesn't exist, `get`
 returns `undefined`. A JSON value is never `undefined`, so it always means
 the value isn't there. A value that's `null` is returned as `null`.
 
-```javascript
+```typescript
 JsonPointer.get("/email", doc); // undefined
 JsonPointer.get("/languages/5", doc); // undefined
 ```
@@ -48,7 +48,7 @@ If a segment before the last doesn't lead to an object or an array, there's
 nothing to step into, and `get` throws a `TypeError` that says where it
 stopped:
 
-```javascript
+```typescript
 JsonPointer.get("/email/domain", doc);
 JsonPointer.get("/name/first", doc);
 ```
