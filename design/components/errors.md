@@ -1,22 +1,33 @@
 # Errors
 
-Errors are classes that extend `Error` or `TypeError`, so they can be told
-apart without matching messages. Each carries the pointer, and where
-applicable, the location where it stopped.
+Each error is its own class, so it can be told apart with `instanceof`
+instead of by its message.
 
-| Thrown when | v1 |
-| --- | --- |
-| The pointer is invalid | `Error("Invalid JSON Pointer")` |
-| A segment before the last doesn't lead to an object or an array | `TypeError` |
-| A segment applied to an array isn't an index or `-` | (not an error) |
+| Class | Extends | Properties | Thrown when |
+| --- | --- | --- | --- |
+| `InvalidPointerError` | `Error` | `pointer` | The pointer is invalid (see [Pointers](pointers.md#parsing-and-validating)) |
+| `NotAContainerError` | `TypeError` | `pointer`, `location`, `segment` | A segment before the last doesn't lead to an object or an array |
+| `InvalidIndexError` | `TypeError` | `pointer`, `location`, `segment` | A segment applied to an array isn't an index or `-` (see [Pointers](pointers.md#array-indexes)) |
 
-The location in a message is built only when the error is thrown, not at
-every step, because it's only needed then.
+`pointer` is the pointer that was given, `location` is the pointer to the
+value the segment was applied to, and `segment` is the segment, unescaped.
 
-## Open questions
+The messages keep v1's form, and the invalid pointer's message includes
+the pointer:
 
-- **Names and properties.** For example `InvalidPointerError`,
-  `NotAContainerError` and `InvalidIndexError`, with `pointer` and
-  `location`.
-- **Messages.** v1's say `Value at '/email' is undefined and does not have
-  property 'domain'`. Keep them?
+```text
+InvalidPointerError: Invalid JSON Pointer: 'foo'
+NotAContainerError: Value at '/email' is undefined and does not have property 'domain'
+InvalidIndexError: Value at '/languages' is an array and 'first' isn't an index
+```
+
+`location` and the message are built only when the error is thrown, not at
+every step, because they're only needed then.
+
+## Rejected
+
+- **`Error` and `TypeError` only**, as in v1. Callers could only tell
+  errors apart by their messages.
+- **One `JsonPointerError` with a `code`.** It's one export instead of
+  three, but `instanceof` is more idiomatic, and `NotAContainerError` and
+  `InvalidIndexError` can still extend `TypeError`.

@@ -16,7 +16,9 @@ copy.
 - A string isn't a container, even though `"abc"[0]` works in JavaScript.
   JSON has no way to point into a string.
 
-## Open questions
+## Rejected
 
-- **`has(pointer, subject)`.** `get` returning `undefined` already says a
-  value isn't there, but `has` doesn't throw when a parent is missing.
+- **`has(pointer, subject)`.** Following JavaScript, it would throw when a
+  parent is missing, like `"x" in a.b` does. Then it's only
+  `get(pointer, subject) !== undefined`, since no JSON value is
+  `undefined`. One that never throws would be unlike everything else here.

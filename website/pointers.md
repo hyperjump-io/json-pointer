@@ -68,8 +68,9 @@ JsonPointer.get(["foo", "0"], doc); // same as get("/foo/0", doc)
 
 A pointer is invalid if it isn't empty and doesn't start with `/`, or if it
 has a `~` that isn't followed by `0` or `1`. Every function that takes a
-pointer throws an `Error` with the message `Invalid JSON Pointer` for one,
-including the curried form when it's given the pointer.
+pointer throws an `InvalidPointerError` for one, including the curried
+form when it's given the pointer. Its `pointer` property is the pointer.
+Segments are never invalid.
 
 ```typescript
 JsonPointer.get("foo", doc); // throws: no leading "/"

@@ -130,5 +130,6 @@ addLanguage(ada, "French").languages; // ["English", "French"]
 
 | Error | When |
 | --- | --- |
-| `Error` with the message `Invalid JSON Pointer` | The pointer isn't valid (see [Invalid pointers](pointers.md#invalid-pointers)). With just a pointer, it's thrown then, before there's a subject. |
-| `TypeError` | A segment before the last doesn't lead to an object or an array, or a segment that steps into an array isn't an index or `-`. The message says where it stopped, like `get`'s (see [When a value isn't there](getting-values.md#when-a-value-isnt-there)). |
+| `InvalidPointerError` | The pointer isn't valid (see [Invalid pointers](pointers.md#invalid-pointers)). With just a pointer, it's thrown then, before there's a subject. |
+| `NotAContainerError` | A segment before the last doesn't lead to an object or an array. It says where it stopped, like `get`'s (see [Errors](getting-values.md#errors)). |
+| `InvalidIndexError` | A segment that steps into an array isn't an index or `-` |

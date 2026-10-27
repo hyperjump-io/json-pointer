@@ -25,8 +25,16 @@ string is a valid segment.
 Code that builds a pointer from parts, like a schema walker, can keep the
 segments and never escape and re-parse them.
 
+The names match `JSON.parse` and `JSON.stringify`: a string to a
+structure, and back.
+
 ### Rejected
 
+- **`toSegments`/`fromSegments`.** They say what you get, but they don't
+  pair as naturally as `parse` and `stringify`.
+- **Keeping v1's `pointerSegments` generator.** It duplicates `parse`, and
+  it only validates once iteration starts. Arrays are also much faster to
+  work with than a generator (v1 commit `6bbcbe5`).
 - **Only strings**, as in v1. Parsing was internal, so a caller with
   segments had to escape them into a string only for it to be parsed back.
 - **A `compile(pointer)` that returns `{ get, set, … }`.** It's a second
@@ -46,20 +54,11 @@ functions: what's applied, then what it's applied to.
 
 ## Array indexes
 
-A segment applied to an array is an index if it's `0` or `[1-9][0-9]*`, the
-same strings JavaScript treats as indexes. `-` is the position after the
-last item. Any other segment applied to an array throws (see
+A segment applied to an array is an index if it's `0` or `[1-9][0-9]*` and
+at most `4294967294` (`2**32 - 2`), the same strings JavaScript treats as
+array indexes. A larger number is an ordinary property in JavaScript,
+which `JSON.stringify` drops. `-` is the position after the last item. Any other segment applied to an array throws (see
 [Don't lose data silently](../principles/dont-lose-data.md)).
 
 v1 used `parseInt`, so `/01`, `/1x`, and `/ 1` were all item 1, `/foo`
 was `NaN`, and `set` wrote a `"NaN"` property onto the array.
-
-## Open questions
-
-- **Names.** `parse` and `stringify` match `JSON`, but `stringify`
-  suggests serializing a value. `fromSegments`/`toSegments` are other
-  options.
-- **`pointerSegments`.** v1's generator duplicates `parse`, and it only
-  validates once iteration starts. With `parse` exported, it can go.
-- **Index bounds.** Is an index past `2**32 - 2` an index? JavaScript says
-  it's an ordinary property, which arrays can't have here.

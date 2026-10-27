@@ -18,14 +18,15 @@ and `remove`. That wasn't a decision: commit `6bbcbe5` made parsing happen
 once instead of on every call, and kept errors thrown when the function was
 called so behavior didn't change.
 
+The curried form is the call with only a pointer, by argument count.
+`get("/a", obj.missing)` throws, saying the value at `''` is undefined,
+where the bug is. TypeScript already rejects an `undefined` subject, so
+this is for JavaScript callers.
+
 ## Rejected
 
 - **No currying.** It's the reason to have a curried form at all:
   `people.map(get("/name"))`.
-
-## Open questions
-
-- **How the forms are told apart.** v1 checks `subject === undefined`, so
-  `get(pointer, undefined)` returns a function. Counting the arguments
-  instead would make `get(pointer, undefined)` throw like any other
-  non-container, at the cost of rest parameters.
+- **Checking `subject === undefined`**, as v1 does. A subject that's
+  missing by mistake silently returns a function, and the error shows up
+  wherever that function ends up, if anywhere.

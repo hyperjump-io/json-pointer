@@ -45,8 +45,8 @@ JsonPointer.get("/languages/5", doc); // undefined
 ```
 
 If a segment before the last doesn't lead to an object or an array, there's
-nothing to step into, and `get` throws a `TypeError` that says where it
-stopped:
+nothing to step into, and `get` throws a `NotAContainerError` that says
+where it stopped:
 
 ```typescript
 JsonPointer.get("/email/domain", doc);
@@ -54,8 +54,8 @@ JsonPointer.get("/name/first", doc);
 ```
 
 ```text
-TypeError: Value at '/email' is undefined and does not have property 'domain'
-TypeError: Value at '/name' is a string and does not have property 'first'
+NotAContainerError: Value at '/email' is undefined and does not have property 'domain'
+NotAContainerError: Value at '/name' is a string and does not have property 'first'
 ```
 
 Only the properties `JSON.stringify` would write count: a value's own
@@ -70,12 +70,17 @@ position after the last item, for adding an item (see
 [Changing values](changing-values.md#arrays)). There's never a value
 there, so `get` returns `undefined` for it.
 
-Any other segment, like `/01` or `/name`, throws a `TypeError`. An array in
+Any other segment, like `/01` or `/name`, throws an `InvalidIndexError`. An array in
 JSON has only items, so there's nothing else for it to name.
 
 ## Errors
 
 | Error | When |
 | --- | --- |
-| `Error` with the message `Invalid JSON Pointer` | The pointer isn't valid (see [Invalid pointers](pointers.md#invalid-pointers)). Thrown by `get(pointer)` too, before there's a subject. |
-| `TypeError` | A segment before the last doesn't lead to an object or an array, or a segment that steps into an array isn't an index or `-` |
+| `InvalidPointerError` | The pointer isn't valid (see [Invalid pointers](pointers.md#invalid-pointers)). Thrown by `get(pointer)` too, before there's a subject. |
+| `NotAContainerError` | A segment before the last doesn't lead to an object or an array |
+| `InvalidIndexError` | A segment that steps into an array isn't an index or `-` |
+
+`NotAContainerError` and `InvalidIndexError` extend `TypeError`, and have
+the pointer, the `location` where it stopped, and the `segment` it
+couldn't apply.
