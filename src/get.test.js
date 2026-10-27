@@ -79,7 +79,7 @@ describe("get", () => {
     });
   });
 
-  describe("only own enumerable properties", () => {
+  describe("only own properties", () => {
     test("not inherited ones", () => {
       expect(JsonPointer.get("/toString", subject)).to.equal(undefined);
       expect(JsonPointer.get("/__proto__", subject)).to.equal(undefined);
@@ -87,11 +87,6 @@ describe("get", () => {
 
     test("not an array's length, which isn't an index", () => {
       expect(() => JsonPointer.get("/foo/length", subject)).to.throw(JsonPointer.InvalidIndexError);
-    });
-
-    test("not ones that aren't enumerable", () => {
-      const hidden = Object.defineProperty({}, "foo", { value: 42, enumerable: false });
-      expect(JsonPointer.get("/foo", hidden)).to.equal(undefined);
     });
 
     test("__proto__ when it's an own property, as JSON.parse makes it", () => {

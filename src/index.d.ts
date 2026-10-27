@@ -54,8 +54,8 @@ export const append: (segment: string, pointer: string) => string;
  * `subject`, not a copy.
  *
  * Returns `undefined` if the last segment names a property or item that
- * isn't there. Only own enumerable properties are found, the ones
- * `JSON.stringify` writes. `-` in an array is never there.
+ * isn't there. Only own properties are found, not inherited ones. `-` in an
+ * array is never there.
  *
  * Given only a pointer, it parses the pointer and returns a function that
  * takes the subject.

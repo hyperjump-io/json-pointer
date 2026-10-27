@@ -27,6 +27,8 @@ hand and have JSDoc explaining the details. Documentation for users is in
 - **Components**: how each part works, what was decided, and what was
   rejected. Open questions and known limitations are with the component
   they're about.
+- **[Benchmarks](benchmarks/README.md)**: the measurements behind the
+  performance decisions.
 
 ## Components
 

@@ -58,8 +58,8 @@ NotAContainerError: Value at '/email' is undefined and does not have property 'd
 NotAContainerError: Value at '/name' is a string and does not have property 'first'
 ```
 
-Only the properties `JSON.stringify` would write count: a value's own
-enumerable properties. `/toString` doesn't find a method on an object.
+Only a value's own properties count, not inherited ones. `/toString`
+doesn't find a method on an object.
 `/length` on an array throws, because `length` isn't an index (see
 [Arrays](#arrays)).
 
