@@ -37,4 +37,5 @@ hand and have JSDoc explaining the details. Documentation for users is in
 - [Changing values](components/changing-values.md): `set`, `assign`,
   `unset`, and `remove`
 - [Errors](components/errors.md)
+- [Types](components/types.md): readonly subjects
 - [What changed from v1](components/v1.md)

@@ -21,6 +21,9 @@ NotAContainerError: Value at '/email' is undefined and does not have property 'd
 InvalidIndexError: Value at '/languages' is an array and 'first' isn't an index
 ```
 
+The constructors are private in the declarations, so throwing them isn't
+part of the API (see [Types](types.md#error-constructors)).
+
 `location` and the message are built only when the error is thrown, not at
 every step, because they're only needed then.
 
