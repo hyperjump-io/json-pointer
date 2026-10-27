@@ -1,5 +1,14 @@
 .github/
-eslint.config.js
+.gitattributes
+oxlint.config.ts
 **/*.test.js
-lib/gherkin.js
+**/*.test-d.ts
+coverage/
 tsconfig.json
+scratch/
+TODO*
+design/
+website/
+CLAUDE.md
+benchmark/
+scripts/

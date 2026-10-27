@@ -1,13 +1,14 @@
-# JSON Pointer
+# Hyperjump - JSON Pointer
 
-This is an implementation of RFC-6901 JSON Pointer. JSON Pointer is designed for
-referring to data values within a JSON document. It's designed to be URL
-friendly so it can be used as a URL fragment that points to a specific part of
-the JSON document.
+An implementation of
+[RFC 6901 JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901). Get, set,
+and remove values in a JSON document by pointer, and build and split
+pointers without escaping them by hand.
 
-## Installation
+**Status:** A from-scratch rewrite for v2, in progress and unpublished. See
+[the design docs](design/README.md) for the decisions made so far.
 
-Includes support for node.js (ES Modules, TypeScript) and browsers.
+## Install
 
 ```bash
 npm install @hyperjump/json-pointer
@@ -30,6 +31,17 @@ npm test
 ```
 
 Run the tests with a continuous test runner
+
 ```bash
 npm test -- --watch
 ```
+
+Lint and type-check
+
+```bash
+npm run lint
+npm run type-check
+```
+
+The design docs, principles, and style guide are in
+[`design/`](design/README.md).

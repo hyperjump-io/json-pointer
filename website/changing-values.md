@@ -66,8 +66,9 @@ JsonPointer.remove("/address", doc);
 "address" in doc; // false
 ```
 
-If the value isn't there, nothing is removed. If what it would be removed
-from isn't there, they throw, like `get` does.
+If the value isn't there, nothing is removed, and `unset` returns `subject`
+itself. If what it would be removed from isn't there, they throw, like
+`get` does.
 
 ## Arrays
 
@@ -81,7 +82,8 @@ more.languages; // ["English", "French", "Greek"]
 ```
 
 Use `-` to add items. Setting an index past the end leaves empty slots
-before it.
+before it. A segment that isn't an index or `-`, like `/languages/first`,
+throws, because an array in JSON can only have items.
 
 Removing an item doesn't move the items after it, so the array keeps its
 length and has an empty slot where the item was. `JSON.stringify` writes
@@ -114,8 +116,8 @@ The empty pointer, `""`, is the whole document. `set` returns `value`, and
 ## Applying a pointer many times
 
 Like `get`, each function takes just a pointer and returns a function that
-takes the rest of the arguments. The pointer is parsed once, the first time
-the function is used.
+takes the rest of the arguments. The pointer is parsed once, when it's
+given.
 
 ```typescript
 const addLanguage = JsonPointer.set("/languages/-");
@@ -128,5 +130,5 @@ addLanguage(ada, "French").languages; // ["English", "French"]
 
 | Error | When |
 | --- | --- |
-| `Error` with the message `Invalid JSON Pointer` | The pointer isn't valid (see [Invalid pointers](pointers.md#invalid-pointers)). With just a pointer, it's thrown when the function that's returned is used. |
-| `TypeError` | A segment before the last doesn't lead to an object or an array. The message says where it stopped, like `get`'s (see [When a value isn't there](getting-values.md#when-a-value-isnt-there)). |
+| `Error` with the message `Invalid JSON Pointer` | The pointer isn't valid (see [Invalid pointers](pointers.md#invalid-pointers)). With just a pointer, it's thrown then, before there's a subject. |
+| `TypeError` | A segment before the last doesn't lead to an object or an array, or a segment that steps into an array isn't an index or `-`. The message says where it stopped, like `get`'s (see [When a value isn't there](getting-values.md#when-a-value-isnt-there)). |

@@ -1,35 +1,38 @@
 {
   "name": "@hyperjump/json-pointer",
-  "version": "1.1.3",
-  "description": "An RFC-6901 JSON Pointer implementation",
-  "type": "module",
-  "main": "./lib/index.js",
-  "exports": "./lib/index.js",
-  "scripts": {
-    "lint": "eslint lib",
-    "test": "vitest --watch=false",
-    "type-check": "tsc --noEmit"
-  },
-  "repository": "github:hyperjump-io/json-pointer",
+  "version": "2.0.0",
+  "description": "An RFC 6901 JSON Pointer implementation",
   "keywords": [
     "JSON Pointer",
-    "RFC-6901"
+    "RFC 6901"
   ],
   "author": "Jason Desrosiers <jdesrosi@gmail.com>",
   "license": "MIT",
+  "repository": "github:hyperjump-io/json-pointer",
   "funding": {
     "type": "github",
-    "url": "https://github.com/sponsors/jdesrosiers"
+    "url": "https://github.com/sponsors/hyperjump-io"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "scripts": {
+    "lint": "oxlint",
+    "test": "vitest run",
+    "type-check": "tsc --noEmit",
+    "version": "node scripts/version-docs.js && git add website"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "*",
     "@types/node": "*",
-    "eslint-import-resolver-typescript": "*",
-    "eslint-plugin-import": "*",
-    "typescript-eslint": "*",
+    "@vitest/coverage-v8": "*",
+    "oxlint": "*",
+    "oxlint-tsgolint": "*",
+    "typescript": "*",
     "vitest": "*"
-  },
-  "allowScripts": {
-    "unrs-resolver@1.12.2": true
   }
 }

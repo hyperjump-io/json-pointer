@@ -58,19 +58,24 @@ TypeError: Value at '/email' is undefined and does not have property 'domain'
 TypeError: Value at '/name' is a string and does not have property 'first'
 ```
 
-Only a value's own properties count. `/toString` doesn't find a method on
-an object, and `/length` doesn't find an array's length.
+Only the properties `JSON.stringify` would write count: a value's own
+enumerable properties. `/toString` doesn't find a method on an object, and
+`/length` doesn't find an array's length.
 
 ## Arrays
 
-A segment that steps into an array is an index, starting from `0`. The
-segment `-` is the position after the last item, for adding an item (see
+A segment that steps into an array is an index, starting from `0`, written
+without leading zeros, so `/01` isn't an index. The segment `-` is the
+position after the last item, for adding an item (see
 [Changing values](changing-values.md#arrays)). There's never a value
 there, so `get` returns `undefined` for it.
+
+Any other segment, like `/01` or `/name`, throws a `TypeError`. An array in
+JSON has only items, so there's nothing else for it to name.
 
 ## Errors
 
 | Error | When |
 | --- | --- |
 | `Error` with the message `Invalid JSON Pointer` | The pointer isn't valid (see [Invalid pointers](pointers.md#invalid-pointers)). Thrown by `get(pointer)` too, before there's a subject. |
-| `TypeError` | A segment before the last doesn't lead to an object or an array |
+| `TypeError` | A segment before the last doesn't lead to an object or an array, or a segment that steps into an array isn't an index or `-` |

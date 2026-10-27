@@ -29,8 +29,8 @@ the starting point for [building pointers](#building-pointers).
 
 A `/` in a property name would read as the start of another segment, so
 it's written `~1`. That makes `~` special too, so a `~` in a property name
-is written `~0`. `append` and `pointerSegments` escape and unescape for
-you, so you only see escapes in pointers written by hand.
+is written `~0`. `append`, `parse`, and `stringify` escape and unescape
+for you, so you only see escapes in pointers written by hand.
 
 ## Building pointers
 
@@ -43,33 +43,33 @@ const item = JsonPointer.append("0", foo); // "/foo/0"
 JsonPointer.append("a/b", JsonPointer.nil); // "/a~1b"
 ```
 
-To build a pointer from a list of segments, start from `nil`:
+## Segments
+
+`parse(pointer)` splits a pointer into its segments, unescaped, and
+`stringify(segments)` escapes them back into a pointer.
 
 ```typescript
-const pointer = ["foo", "a/b", "0"].reduce(
-  (pointer, segment) => JsonPointer.append(segment, pointer),
-  JsonPointer.nil
-);
-pointer; // "/foo/a~1b/0"
-```
-
-## Reading segments
-
-`pointerSegments(pointer)` iterates over a pointer's segments, unescaped.
-
-```typescript
-[...JsonPointer.pointerSegments("/foo/a~1b/0")]; // ["foo", "a/b", "0"]
-[...JsonPointer.pointerSegments(JsonPointer.nil)]; // []
+JsonPointer.parse("/foo/a~1b/0"); // ["foo", "a/b", "0"]
+JsonPointer.parse(JsonPointer.nil); // []
+JsonPointer.stringify(["foo", "a/b", "0"]); // "/foo/a~1b/0"
 ```
 
 Segments are always strings, array indexes included.
+
+Every function that takes a pointer also takes its segments. If you build
+pointers from parts, keep the segments, and they're never escaped and
+parsed again.
+
+```typescript
+JsonPointer.get(["foo", "0"], doc); // same as get("/foo/0", doc)
+```
 
 ## Invalid pointers
 
 A pointer is invalid if it isn't empty and doesn't start with `/`, or if it
 has a `~` that isn't followed by `0` or `1`. Every function that takes a
-pointer throws an `Error` with the message `Invalid JSON Pointer` for one.
-`pointerSegments` throws when you start iterating.
+pointer throws an `Error` with the message `Invalid JSON Pointer` for one,
+including the curried form when it's given the pointer.
 
 ```typescript
 JsonPointer.get("foo", doc); // throws: no leading "/"

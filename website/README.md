@@ -22,8 +22,9 @@ doc.foo.bar; // 42
   the original alone. `assign` and `remove` change it in place.
 - **Parse once, apply many times.** Give a function just a pointer, and it
   returns a function you can apply to any number of documents.
-- **Escaping handled.** `append` and `pointerSegments` escape and unescape
-  `~` and `/` for you.
+- **Escaping handled.** `append`, `parse`, and `stringify` escape and
+  unescape `~` and `/` for you, and every function takes segments as well
+  as pointers.
 - **Small.** No dependencies, with TypeScript types, for Node.js and
   browsers.
 
