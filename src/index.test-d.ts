@@ -12,18 +12,28 @@ JsonPointer.get(["foo", "0"] as const, doc);
 // What's found in a mutable value is mutable
 JsonPointer.get("/name", doc) satisfies Json | undefined;
 JsonPointer.set("/name", doc, "Grace") satisfies Json;
-JsonPointer.unset("/name", doc) satisfies Json | undefined;
+JsonPointer.unset("/name", doc) satisfies Json;
+
+// set and unset return the subject's type, so what's in it can be read
+const person = { name: "Ada", address: { city: "London" } };
+JsonPointer.set("/address/city", person, "Paris").address.city satisfies string;
+JsonPointer.unset("/name", person).address.city satisfies string;
+JsonPointer.set("/name", JsonPointer.set("/address/city", person, "Paris"), "Grace") satisfies typeof person;
+
+// With the empty pointer, set returns the value and unset returns undefined
+JsonPointer.set(JsonPointer.nil, person, 42) satisfies number;
+JsonPointer.unset(JsonPointer.nil, person) satisfies undefined;
+JsonPointer.set(JsonPointer.nil)(person, 42) satisfies number;
+JsonPointer.unset(JsonPointer.nil)(person) satisfies undefined;
 
 // What's only read can be readonly, and what's found in it stays readonly
 JsonPointer.get("/languages", constDoc) satisfies ReadonlyJson | undefined;
 // @ts-expect-error
 JsonPointer.get("/languages", constDoc) satisfies Json | undefined;
+JsonPointer.set("/name", constDoc, "Grace") satisfies typeof constDoc;
+JsonPointer.unset("/name", constDoc) satisfies typeof constDoc;
 // @ts-expect-error
 JsonPointer.set("/name", constDoc, "Grace") satisfies Json;
-// @ts-expect-error
-JsonPointer.set("/name", doc, ["Grace"] as const) satisfies Json;
-// @ts-expect-error
-JsonPointer.unset("/name", constDoc) satisfies Json | undefined;
 
 // What changes its subject in place can't take a readonly one
 // @ts-expect-error
@@ -39,6 +49,7 @@ getName(constDoc) satisfies ReadonlyJson | undefined;
 
 const setName: Setter = JsonPointer.set("/name");
 setName(doc, "Ada") satisfies Json;
+setName(person, "Grace") satisfies typeof person;
 
 // A missing subject isn't a curried call
 // @ts-expect-error

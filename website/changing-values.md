@@ -98,7 +98,7 @@ JSON.stringify(fewer.languages); // '[null,"French"]'
 To take an item out and move the rest up, set the array to one without it:
 
 ```typescript
-const languages = JsonPointer.get("/languages", doc);
+const languages = JsonPointer.get("/languages", doc) as string[];
 const shifted = JsonPointer.set(
   "/languages",
   doc,
@@ -112,6 +112,17 @@ shifted.languages; // ["French"]
 The empty pointer, `""`, is the whole document. `set` returns `value`, and
 `unset` returns `undefined`. A value can't replace itself in place, so
 `assign` and `remove` do nothing with it.
+
+## TypeScript
+
+`set` and `unset` return a value with `subject`'s type. A pointer is a
+string, so TypeScript can't know what's at it, and the result is typed as
+though `value` has the type of what it replaces. If it doesn't, cast the
+result. `get` returns a `Json`, so cast what it returns too, like
+`languages` above.
+
+With the empty pointer, `set` returns `value`'s type, and `unset` returns
+`undefined`.
 
 ## Applying a pointer many times
 

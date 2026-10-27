@@ -74,16 +74,20 @@ export const get: {
 export type Getter = <T extends ReadonlyJson>(subject: T) => Shared<T> | undefined;
 
 /**
- * A value that's part of a `T`, or shares parts of one: {@link ReadonlyJson}
- * if any of `T` is, otherwise {@link Json}.
+ * A value that's part of a `T`: {@link ReadonlyJson} if any of `T` is,
+ * otherwise {@link Json}.
  */
 export type Shared<T extends ReadonlyJson> = [T] extends [Json] ? Json : ReadonlyJson;
 
 /**
  * Returns a copy of `subject` with `value` at the pointer. `subject` isn't
  * changed. Only the objects and arrays on the way to the value are copied,
- * and everything else is shared with `subject`. If `subject` or `value` is
- * a {@link ReadonlyJson}, so is the result, because it shares them.
+ * and everything else is shared with `subject`.
+ *
+ * The result has `subject`'s type. A pointer is a string, so TypeScript
+ * can't know what's at it, and the result is typed as though `value` has
+ * the type of what it replaces. If it doesn't, cast the result. With the
+ * empty pointer, the result is `value`, and has its type.
  *
  * The property or item is added if it isn't there, but what it's added to
  * has to exist. In an array, `-` adds an item to the end, and an index past
@@ -101,10 +105,12 @@ export type Shared<T extends ReadonlyJson> = [T] extends [Json] ? Json : Readonl
  *   index or `-`.
  */
 export const set: {
-  <T extends ReadonlyJson, V extends ReadonlyJson>(pointer: Pointer, subject: T, value: V): Shared<T | V>;
+  <V extends ReadonlyJson>(pointer: "", subject: ReadonlyJson, value: V): V;
+  <T extends ReadonlyJson>(pointer: Pointer, subject: T, value: ReadonlyJson): T;
+  (pointer: ""): <V extends ReadonlyJson>(subject: ReadonlyJson, value: V) => V;
   (pointer: Pointer): Setter;
 };
-export type Setter = <T extends ReadonlyJson, V extends ReadonlyJson>(subject: T, value: V) => Shared<T | V>;
+export type Setter = <T extends ReadonlyJson>(subject: T, value: ReadonlyJson) => T;
 
 /**
  * Sets `value` at the pointer in `subject`, in place.
@@ -133,8 +139,10 @@ export type Assigner = (subject: Json, value: Json) => void;
 /**
  * Returns a copy of `subject` without the value at the pointer. `subject`
  * isn't changed. Only the objects and arrays on the way to the value are
- * copied, and everything else is shared with `subject`. If `subject` is a
- * {@link ReadonlyJson}, so is the result.
+ * copied, and everything else is shared with `subject`.
+ *
+ * The result has `subject`'s type, though a property it requires may be
+ * gone. With the empty pointer, the result is `undefined`.
  *
  * If the value isn't there, it returns `subject` itself. Removing an array
  * item leaves a hole, and the items after it don't move. With the empty
@@ -151,10 +159,12 @@ export type Assigner = (subject: Json, value: Json) => void;
  *   index or `-`.
  */
 export const unset: {
-  <T extends ReadonlyJson>(pointer: Pointer, subject: T): Shared<T> | undefined;
+  (pointer: "", subject: ReadonlyJson): undefined;
+  <T extends ReadonlyJson>(pointer: Pointer, subject: T): T;
+  (pointer: ""): (subject: ReadonlyJson) => undefined;
   (pointer: Pointer): Unsetter;
 };
-export type Unsetter = <T extends ReadonlyJson>(subject: T) => Shared<T> | undefined;
+export type Unsetter = <T extends ReadonlyJson>(subject: T) => T;
 
 /**
  * Removes the value at the pointer from `subject`, in place.
