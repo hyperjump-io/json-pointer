@@ -1,0 +1,43 @@
+# JSON Pointer
+
+An implementation of
+[RFC 6901 JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901). A JSON
+Pointer is a string, like `/foo/0/bar`, that identifies one value in a JSON
+document. This package gets values by pointer, sets and removes them, and
+builds and splits pointers so you never escape them by hand.
+
+```javascript
+import * as JsonPointer from "@hyperjump/json-pointer";
+
+const doc = { foo: { bar: 42 } };
+
+JsonPointer.get("/foo/bar", doc); // 42
+
+const updated = JsonPointer.set("/foo/bar", doc, 33);
+updated.foo.bar; // 33
+doc.foo.bar; // 42
+```
+
+- **Immutable or in place.** `set` and `unset` return a new value and leave
+  the original alone. `assign` and `remove` change it in place.
+- **Parse once, apply many times.** Give a function just a pointer, and it
+  returns a function you can apply to any number of documents.
+- **Escaping handled.** `append` and `pointerSegments` escape and unescape
+  `~` and `/` for you.
+- **Small.** No dependencies, with TypeScript types, for Node.js and
+  browsers.
+
+[`@hyperjump/json-schema`](https://github.com/hyperjump-io/json-schema/blob/v2/website/README.md)
+and
+[`@hyperjump/browser`](https://github.com/hyperjump-io/browser/blob/v2/website/README.md)
+are built on it.
+
+## Contents
+
+- [Install](install.md): Node.js, browsers, and TypeScript
+- [Pointers](pointers.md): how pointers are written, building them, and
+  pointers in URIs
+- [Getting values](getting-values.md): `get`, and what happens when a value
+  isn't there
+- [Changing values](changing-values.md): `set`, `assign`, `unset`, and
+  `remove`
