@@ -9,8 +9,8 @@ copy.
 - If a segment before the last doesn't lead to an object or an array, it
   throws, saying where it stopped (see [Errors](errors.md)).
 - Only own enumerable properties are found, the ones `JSON.stringify`
-  writes. `/toString` doesn't find a method, and `/length` doesn't find an
-  array's length (see
+  writes. `/toString` doesn't find a method. `/length` on an array throws,
+  because `length` isn't an index (see
   [Don't lose data silently](../principles/dont-lose-data.md)).
 - `-` on an array is never there, so it returns `undefined`.
 - A string isn't a container, even though `"abc"[0]` works in JavaScript.

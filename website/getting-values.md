@@ -59,8 +59,9 @@ NotAContainerError: Value at '/name' is a string and does not have property 'fir
 ```
 
 Only the properties `JSON.stringify` would write count: a value's own
-enumerable properties. `/toString` doesn't find a method on an object, and
-`/length` doesn't find an array's length.
+enumerable properties. `/toString` doesn't find a method on an object.
+`/length` on an array throws, because `length` isn't an index (see
+[Arrays](#arrays)).
 
 ## Arrays
 

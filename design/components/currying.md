@@ -23,6 +23,10 @@ The curried form is the call with only a pointer, by argument count.
 where the bug is. TypeScript already rejects an `undefined` subject, so
 this is for JavaScript callers.
 
+`set(pointer, subject)` and `assign(pointer, subject)`, without a value,
+aren't curried either. They set `undefined`, like `obj.x = undefined` does
+in JavaScript.
+
 ## Rejected
 
 - **No currying.** It's the reason to have a curried form at all:
