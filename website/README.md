@@ -33,7 +33,9 @@ and
 [`@hyperjump/browser`](https://github.com/hyperjump-io/browser/blob/v2/website/README.md)
 are built on it.
 
-Using v1? [Migrating from v1](migrating.md) lists what changed.
+Using version 1.x? Its docs are in the
+[1.x README](https://github.com/hyperjump-io/json-pointer/tree/v1#readme), and
+[Migrating from v1](migrating.md) lists what changed.
 
 ## Contents
 
