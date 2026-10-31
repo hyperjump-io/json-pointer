@@ -10,7 +10,8 @@ A from-scratch rewrite of `@hyperjump/json-pointer` v1 (`../json-pointer`).
   and `components/` say how each part works and what was decided, with its
   open questions and known limitations.
 - `website/` is the user documentation. It's built into the site at
-  hyperjump.io from `../hyperjump.io`, whose README has how to write it. A
+  hyperjump.io from `../hyperjump.io`, where `design/style/` says how to
+  write the prose and the README says how pages are put together. A
   feature that isn't released gets `*Coming soon*` on its own line under
   its heading. `npm version` replaces it with `*Added in vX.Y.Z*`
   (`scripts/version-docs.js`).
