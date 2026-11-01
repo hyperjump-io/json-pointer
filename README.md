@@ -17,8 +17,8 @@ npm install @hyperjump/json-pointer
 ## Documentation
 
 The documentation is in [`website/`](website/README.md). Start with
-[Getting values](website/getting-values.md) and
-[Changing values](website/changing-values.md).
+[Get values](website/get-values.md) and
+[Change values](website/change-values.md).
 
 ## Contributing
 
