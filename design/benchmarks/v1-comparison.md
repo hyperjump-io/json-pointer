@@ -5,28 +5,28 @@ First recorded 2026-10-26, against v1 at `01948aa` (1.1.3 plus docs).
 `benchmark/compare.bench.js` times each operation in v1 and v2 on the same
 small document, for an object path (`/address/geo/lat`), an array path
 (`/items/42/tags/1`, in a 100-item array), and an escaped path. Times are
-the mean per call.
+the mean per call, in nanoseconds.
 
 | Benchmark | v1 | v2 | v2/v1 |
 | --- | --- | --- | --- |
-| parse | 229 ns | 96 ns | 0.42x |
-| parse with escapes | 520 ns | 392 ns | 0.75x |
-| append | 58 ns | 51 ns | 0.88x |
-| get, object path | 251 ns | 282 ns | 1.12x |
-| get curried, object path | 82 ns | 81 ns | 0.99x |
-| get, array path | 275 ns | 309 ns | 1.12x |
-| get curried, array path | 109 ns | 98 ns | 0.90x |
-| get, escaped path | 470 ns | 477 ns | 1.02x |
-| get curried, escaped path | 66 ns | 66 ns | 1.00x |
-| get, array path, v2 given segments | 345 ns | 109 ns | 0.32x |
-| set, object path | 345 ns | 385 ns | 1.12x |
-| set, array path | 521 ns | 546 ns | 1.05x |
-| set, append to array | 396 ns | 413 ns | 1.04x |
-| set curried, array path | 302 ns | 300 ns | 0.99x |
-| assign, array path | 518 ns | 372 ns | 0.72x |
-| unset, array path | 623 ns | 559 ns | 0.90x |
-| unset, not there | 413 ns | 288 ns | 0.70x |
-| assign then remove, object path | 655 ns | 492 ns | 0.75x |
+| parse | 229 | 96 | 0.42x |
+| parse with escapes | 520 | 392 | 0.75x |
+| append | 58 | 51 | 0.88x |
+| get, object path | 251 | 282 | 1.12x |
+| get curried, object path | 82 | 81 | 0.99x |
+| get, array path | 275 | 309 | 1.12x |
+| get curried, array path | 109 | 98 | 0.90x |
+| get, escaped path | 470 | 477 | 1.02x |
+| get curried, escaped path | 66 | 66 | 1.00x |
+| get, array path, v2 given segments | 345 | 109 | 0.32x |
+| set, object path | 345 | 385 | 1.12x |
+| set, array path | 521 | 546 | 1.05x |
+| set, append to array | 396 | 413 | 1.04x |
+| set curried, array path | 302 | 300 | 0.99x |
+| assign, array path | 518 | 372 | 0.72x |
+| unset, array path | 623 | 559 | 0.90x |
+| unset, not there | 413 | 288 | 0.70x |
+| assign then remove, object path | 655 | 492 | 0.75x |
 
 - v1's `parse` row is `pointerSegments` spread into an array, which isn't
   what v1's `get` uses internally, so it overstates the difference.
