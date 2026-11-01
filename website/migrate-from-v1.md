@@ -1,10 +1,8 @@
 # Migrate from v1
 
 v2 has the same functions as v1, and they do the same things, so most code
-works without changes. Most of the changes fix things that v1 got wrong: it
-read array indexes too loosely, and it mishandled `__proto__`. The
-following sections list each change that can break code, and what to do
-about it.
+works without changes. The following sections list each change that can
+break code, and what to do about it.
 
 ## The `parse` function replaces `pointerSegments`
 
@@ -45,17 +43,12 @@ InvalidPointerError: Invalid JSON Pointer: 'foo'
 
 The other messages are the same as v1's.
 
-## Array indexes are strict
+## Array segments must be indexes
 
-A segment that steps into an array has to be `-` or an index without
-leading zeros. v1 read the segment with `parseInt`, so it accepted segments
-that JavaScript doesn't treat as indexes. The following table shows what
-each version does with them:
-
-| Segment | v1 | v2 |
-| --- | --- | --- |
-| `01`, `1x`, ` 1` | Item 1 | Throws `InvalidIndexError` |
-| `foo`, `-1`, `length` | `get` returned `undefined` and `set` added a property to the array | Throws `InvalidIndexError` |
+A segment that steps into an array has to be an index or `-`. Any other
+segment, like `foo`, `-1`, or `length`, throws an `InvalidIndexError`. In
+v1, `get` returned `undefined` for it, and `set` added a property to the
+array.
 
 An array in JSON has only items, so `JSON.stringify` drops any property
 that you add to an array. v2 throws instead. For more information, see
@@ -76,12 +69,6 @@ function. v1 checked whether the subject was `undefined`, so
 `get(pointer, undefined)` returned a function. In v2, that's a call with an
 `undefined` subject, so it throws a `NotAContainerError`. If a subject
 might be `undefined`, check it before you call the function.
-
-## The `__proto__` key is an ordinary property
-
-In v1, `set` and `assign` with `/__proto__` changed the value's prototype,
-and `JSON.stringify` then dropped what they set. v2 sets it as an ordinary
-property, the way `JSON.parse` does.
 
 ## The `unset` function returns the subject when there's nothing to remove
 
