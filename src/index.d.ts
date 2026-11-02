@@ -4,8 +4,9 @@ export type JsonObject = {
 };
 
 /**
- * A JSON value that can't be changed, like one declared `as const`. `get`,
- * `set`, and `unset` take one, because they don't change their subject.
+ * A JSON value that can't be changed, like one declared `as const`.
+ * `pointerGet`, `pointerSet`, and `pointerUnset` take one, because they
+ * don't change their subject.
  * Every {@link Json} is a `ReadonlyJson`.
  */
 export type ReadonlyJson = string | number | boolean | null | ReadonlyJsonObject | readonly ReadonlyJson[];
@@ -17,16 +18,13 @@ export type ReadonlyJsonObject = {
  * A pointer parsed into its segments, unescaped. `["foo", "a/b"]` is the
  * pointer `/foo/a~1b`. Any list of strings is a valid pointer.
  */
-export type Segments = readonly string[];
+export type PointerSegments = readonly string[];
 
 /**
- * A pointer, as a string like `/foo/0`, or as its {@link Segments}. A string
- * is parsed and validated. Segments are used as they are.
+ * A pointer, as a string like `/foo/0`, or as its {@link PointerSegments}. A
+ * string is parsed and validated. Segments are used as they are.
  */
-export type Pointer = string | Segments;
-
-/** The empty pointer, `""`, which is the whole document. */
-export const nil: "";
+export type Pointer = string | PointerSegments;
 
 /**
  * Splits a pointer into its segments, unescaping `~1` to `/` and `~0` to
@@ -35,19 +33,19 @@ export const nil: "";
  * @throws {InvalidPointerError} If the pointer isn't empty and doesn't
  *   start with `/`, or it has a `~` that isn't followed by `0` or `1`.
  */
-export const parse: (pointer: string) => string[];
+export const pointerParse: (pointer: string) => string[];
 
 /**
  * Joins segments into a pointer, escaping `~` as `~0` and `/` as `~1`. No
  * segments is the empty pointer.
  */
-export const stringify: (segments: Segments) => string;
+export const pointerStringify: (segments: PointerSegments) => string;
 
 /**
  * Adds a segment to the end of a pointer, escaping it. The segment comes
  * first, then the pointer it's added to.
  */
-export const append: (segment: string, pointer: string) => string;
+export const pointerAppend: (segment: string, pointer: string) => string;
 
 /**
  * Returns the value the pointer identifies in `subject`. It's the value in
@@ -67,11 +65,11 @@ export const append: (segment: string, pointer: string) => string;
  * @throws {InvalidIndexError} If a segment applied to an array isn't an
  *   index or `-`.
  */
-export const get: {
+export const pointerGet: {
   <T extends ReadonlyJson>(pointer: Pointer, subject: T): Shared<T> | undefined;
-  (pointer: Pointer): Getter;
+  (pointer: Pointer): PointerGetter;
 };
-export type Getter = <T extends ReadonlyJson>(subject: T) => Shared<T> | undefined;
+export type PointerGetter = <T extends ReadonlyJson>(subject: T) => Shared<T> | undefined;
 
 /**
  * A value that's part of a `T`: {@link ReadonlyJson} if any of `T` is,
@@ -104,13 +102,13 @@ export type Shared<T extends ReadonlyJson> = [T] extends [Json] ? Json : Readonl
  * @throws {InvalidIndexError} If a segment applied to an array isn't an
  *   index or `-`.
  */
-export const set: {
+export const pointerSet: {
   <V extends ReadonlyJson>(pointer: "", subject: ReadonlyJson, value: V): V;
   <T extends ReadonlyJson>(pointer: Pointer, subject: T, value: ReadonlyJson): T;
   (pointer: ""): <V extends ReadonlyJson>(subject: ReadonlyJson, value: V) => V;
-  (pointer: Pointer): Setter;
+  (pointer: Pointer): PointerSetter;
 };
-export type Setter = <T extends ReadonlyJson>(subject: T, value: ReadonlyJson) => T;
+export type PointerSetter = <T extends ReadonlyJson>(subject: T, value: ReadonlyJson) => T;
 
 /**
  * Sets `value` at the pointer in `subject`, in place.
@@ -130,11 +128,11 @@ export type Setter = <T extends ReadonlyJson>(subject: T, value: ReadonlyJson) =
  * @throws {InvalidIndexError} If a segment applied to an array isn't an
  *   index or `-`.
  */
-export const assign: {
+export const pointerAssign: {
   (pointer: Pointer, subject: Json, value: Json): void;
-  (pointer: Pointer): Assigner;
+  (pointer: Pointer): PointerAssigner;
 };
-export type Assigner = (subject: Json, value: Json) => void;
+export type PointerAssigner = (subject: Json, value: Json) => void;
 
 /**
  * Returns a copy of `subject` without the value at the pointer. `subject`
@@ -158,13 +156,13 @@ export type Assigner = (subject: Json, value: Json) => void;
  * @throws {InvalidIndexError} If a segment applied to an array isn't an
  *   index or `-`.
  */
-export const unset: {
+export const pointerUnset: {
   (pointer: "", subject: ReadonlyJson): undefined;
   <T extends ReadonlyJson>(pointer: Pointer, subject: T): T;
   (pointer: ""): (subject: ReadonlyJson) => undefined;
-  (pointer: Pointer): Unsetter;
+  (pointer: Pointer): PointerUnsetter;
 };
-export type Unsetter = <T extends ReadonlyJson>(subject: T) => T;
+export type PointerUnsetter = <T extends ReadonlyJson>(subject: T) => T;
 
 /**
  * Removes the value at the pointer from `subject`, in place.
@@ -183,11 +181,11 @@ export type Unsetter = <T extends ReadonlyJson>(subject: T) => T;
  * @throws {InvalidIndexError} If a segment applied to an array isn't an
  *   index or `-`.
  */
-export const remove: {
+export const pointerRemove: {
   (pointer: Pointer, subject: Json): void;
-  (pointer: Pointer): Remover;
+  (pointer: Pointer): PointerRemover;
 };
-export type Remover = (subject: Json) => void;
+export type PointerRemover = (subject: Json) => void;
 
 /**
  * The pointer isn't empty and doesn't start with `/`, or it has a `~` that

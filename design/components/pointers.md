@@ -17,24 +17,24 @@ in v1 (commit `6bbcbe5`).
 
 ## Segments as a pointer
 
-`parse(pointer)` returns the segments and `stringify(segments)` escapes
-them back into a pointer. A function given segments uses them as they are,
-without parsing or validating, since there's nothing to validate: any
-string is a valid segment.
+`pointerParse(pointer)` returns the segments and
+`pointerStringify(segments)` escapes them back into a pointer. A function
+given segments uses them as they are, without parsing or validating, since
+there's nothing to validate: any string is a valid segment.
 
 Code that builds a pointer from parts, like a schema walker, can keep the
 segments and never escape and re-parse them.
 
-The names match `JSON.parse` and `JSON.stringify`: a string to a
-structure, and back.
+After the `pointer` prefix (see [Naming](naming.md)), the names match
+`JSON.parse` and `JSON.stringify`: a string to a structure, and back.
 
 ### Rejected
 
 - **`toSegments`/`fromSegments`.** They say what you get, but they don't
-  pair as naturally as `parse` and `stringify`.
-- **Keeping v1's `pointerSegments` generator.** It duplicates `parse`, and
-  it only validates once iteration starts. Arrays are also much faster to
-  work with than a generator (v1 commit `6bbcbe5`).
+  pair as naturally as `pointerParse` and `pointerStringify`.
+- **Keeping v1's `pointerSegments` generator.** It duplicates
+  `pointerParse`, and it only validates once iteration starts. Arrays are
+  also much faster to work with than a generator (v1 commit `6bbcbe5`).
 - **Only strings**, as in v1. Parsing was internal, so a caller with
   segments had to escape them into a string only for it to be parsed back.
 - **A `compile(pointer)` that returns `{ get, set, … }`.** It's a second
@@ -42,22 +42,22 @@ structure, and back.
 
 ## Building pointers
 
-`nil` is the empty pointer, `""`, the whole document.
-`append(segment, pointer)` escapes `segment` and adds it to the end of
-`pointer`. The segment comes first so `append` reads like the curried
-functions: what's applied, then what it's applied to.
+`pointerAppend(segment, pointer)` escapes `segment` and adds it to the end
+of `pointer`. The segment comes first so `pointerAppend` reads like the
+curried functions: what's applied, then what it's applied to.
 
 ### Rejected
 
-- **`append(pointer, ...segments)`.** It reads naturally on its own, but
-  it's a different order from everything else.
+- **`pointerAppend(pointer, ...segments)`.** It reads naturally on its own,
+  but it's a different order from everything else.
 
 ## Array indexes
 
 A segment applied to an array is an index if it's `0` or `[1-9][0-9]*` and
 at most `4294967294` (`2**32 - 2`), the same strings JavaScript treats as
-array indexes. A larger number is an ordinary property in JavaScript,
-which `JSON.stringify` drops. `-` is the position after the last item. Any other segment applied to an array throws (see
+array indexes. A larger number is an ordinary property in JavaScript, which
+`JSON.stringify` drops. `-` is the position after the last item. Any other
+segment applied to an array throws (see
 [Don't lose data silently](../principles/dont-lose-data.md)).
 
 v1 used `parseInt`, so `/01`, `/1x`, and `/ 1` were all item 1, `/foo`

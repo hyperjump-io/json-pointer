@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import * as JsonPointer from "./index.js";
+import { InvalidIndexError, InvalidPointerError, NotAContainerError, pointerGet } from "./index.js";
 
 // The example from RFC 6901, section 5, plus some
 const subject = {
@@ -17,7 +17,7 @@ const subject = {
   "bbb": { "-": { ccc: 13 } }
 };
 
-describe("get", () => {
+describe("pointerGet", () => {
   test.each([
     ["", subject],
     ["/foo", ["bar", "baz"]],
@@ -35,25 +35,25 @@ describe("get", () => {
     ["/bbb/-", { ccc: 13 }],
     ["/bbb/-/ccc", 13]
   ])("%j is %j", (pointer, expected) => {
-    expect(JsonPointer.get(pointer, subject)).to.eql(expected);
+    expect(pointerGet(pointer, subject)).to.eql(expected);
   });
 
   test("returns the value in the subject, not a copy", () => {
-    expect(JsonPointer.get("/foo", subject)).to.equal(subject.foo);
+    expect(pointerGet("/foo", subject)).to.equal(subject.foo);
   });
 
   describe("segments", () => {
     test("are a pointer", () => {
-      expect(JsonPointer.get(["foo", "0"], subject)).to.equal("bar");
+      expect(pointerGet(["foo", "0"], subject)).to.equal("bar");
     });
 
     test("are used as they are, without unescaping", () => {
-      expect(JsonPointer.get(["a/b"], subject)).to.equal(1);
-      expect(JsonPointer.get(["a~1b"], subject)).to.equal(undefined);
+      expect(pointerGet(["a/b"], subject)).to.equal(1);
+      expect(pointerGet(["a~1b"], subject)).to.equal(undefined);
     });
 
     test("can be readonly", () => {
-      expect(JsonPointer.get(Object.freeze(["foo", "1"]), subject)).to.equal("baz");
+      expect(pointerGet(Object.freeze(["foo", "1"]), subject)).to.equal("baz");
     });
   });
 
@@ -63,11 +63,11 @@ describe("get", () => {
       ["/foo/2"],
       ["/bbb/zzz"]
     ])("%j is undefined", (pointer) => {
-      expect(JsonPointer.get(pointer, subject)).to.equal(undefined);
+      expect(pointerGet(pointer, subject)).to.equal(undefined);
     });
 
     test("throws when what it would be in isn't there", () => {
-      expect(() => JsonPointer.get("/zzz/0", subject)).to.throw(JsonPointer.NotAContainerError);
+      expect(() => pointerGet("/zzz/0", subject)).to.throw(NotAContainerError);
     });
 
     test.each([
@@ -75,22 +75,22 @@ describe("get", () => {
       ["a number", "//0"],
       ["null", "/aaa/0"]
     ])("throws when what it would be in is %s", (_type, pointer) => {
-      expect(() => JsonPointer.get(pointer, subject)).to.throw(JsonPointer.NotAContainerError);
+      expect(() => pointerGet(pointer, subject)).to.throw(NotAContainerError);
     });
   });
 
   describe("only own properties", () => {
     test("not inherited ones", () => {
-      expect(JsonPointer.get("/toString", subject)).to.equal(undefined);
-      expect(JsonPointer.get("/__proto__", subject)).to.equal(undefined);
+      expect(pointerGet("/toString", subject)).to.equal(undefined);
+      expect(pointerGet("/__proto__", subject)).to.equal(undefined);
     });
 
     test("not an array's length, which isn't an index", () => {
-      expect(() => JsonPointer.get("/foo/length", subject)).to.throw(JsonPointer.InvalidIndexError);
+      expect(() => pointerGet("/foo/length", subject)).to.throw(InvalidIndexError);
     });
 
     test("__proto__ when it's an own property, as JSON.parse makes it", () => {
-      expect(JsonPointer.get("/__proto__", JSON.parse(`{ "__proto__": 42 }`))).to.equal(42);
+      expect(pointerGet("/__proto__", JSON.parse(`{ "__proto__": 42 }`))).to.equal(42);
     });
   });
 
@@ -98,11 +98,11 @@ describe("get", () => {
     const array = ["a", "b", "c"];
 
     test("- is never there", () => {
-      expect(JsonPointer.get("/-", array)).to.equal(undefined);
+      expect(pointerGet("/-", array)).to.equal(undefined);
     });
 
     test("the largest index", () => {
-      expect(JsonPointer.get("/4294967294", array)).to.equal(undefined);
+      expect(pointerGet("/4294967294", array)).to.equal(undefined);
     });
 
     test.each([
@@ -121,35 +121,35 @@ describe("get", () => {
       ["4294967295"],
       ["99999999999"]
     ])("%j isn't an index", (segment) => {
-      expect(() => JsonPointer.get([segment], array)).to.throw(JsonPointer.InvalidIndexError);
+      expect(() => pointerGet([segment], array)).to.throw(InvalidIndexError);
     });
   });
 
   describe("an invalid pointer", () => {
     test("throws", () => {
-      expect(() => JsonPointer.get("foo", subject)).to.throw(JsonPointer.InvalidPointerError);
+      expect(() => pointerGet("foo", subject)).to.throw(InvalidPointerError);
     });
   });
 
   describe("given only a pointer", () => {
     test("returns a function that takes the subject", () => {
-      const getFoo = JsonPointer.get("/foo/0");
+      const getFoo = pointerGet("/foo/0");
       expect(getFoo(subject)).to.equal("bar");
       expect(getFoo({ foo: ["baz"] })).to.equal("baz");
     });
 
     test("works with map", () => {
       const people = [{ name: "Ada" }, { name: "Grace" }];
-      expect(people.map(JsonPointer.get("/name"))).to.eql(["Ada", "Grace"]);
+      expect(people.map(pointerGet("/name"))).to.eql(["Ada", "Grace"]);
     });
 
     test("throws for an invalid pointer before there's a subject", () => {
-      expect(() => JsonPointer.get("foo")).to.throw(JsonPointer.InvalidPointerError);
+      expect(() => pointerGet("foo")).to.throw(InvalidPointerError);
     });
 
     test("isn't what an undefined subject gives", () => {
       // @ts-expect-error
-      expect(() => JsonPointer.get("/foo", undefined)).to.throw(JsonPointer.NotAContainerError);
+      expect(() => pointerGet("/foo", undefined)).to.throw(NotAContainerError);
     });
   });
 });

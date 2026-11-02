@@ -1,25 +1,57 @@
 # Migrate from v1
 
-v2 has the same functions as v1, and they do the same things, so most code
-works without changes. The following sections list each change that can
-break code, and what to do about it.
+v2 has the same functions as v1, and they do the same things, but each one
+has a new name. The following sections list each change that can break
+code, and what to do about it.
 
-## The `parse` function replaces `pointerSegments`
+## Functions have new names
 
-`parse` returns an array instead of a generator. It throws for an invalid
-pointer when you call it, not when you start iterating:
+Each name starts with `pointer`, so it makes sense on its own when you
+import it by name. The following table shows the v2 name for each v1
+function:
+
+| v1 | v2 |
+| --- | --- |
+| `get` | `pointerGet` |
+| `set` | `pointerSet` |
+| `assign` | `pointerAssign` |
+| `unset` | `pointerUnset` |
+| `remove` | `pointerRemove` |
+| `append` | `pointerAppend` |
+| `pointerSegments` | `pointerParse`. For more information, see [The `pointerParse` function replaces `pointerSegments`](#the-pointerparse-function-replaces-pointersegments). |
+| `nil` | Removed. Use `""`. |
+
+Import the functions by name instead of as a namespace:
+
+```typescript
+// v1
+import * as JsonPointer from "@hyperjump/json-pointer";
+JsonPointer.get("/foo", doc);
+
+// v2
+import { pointerGet } from "@hyperjump/json-pointer";
+pointerGet("/foo", doc);
+```
+
+The types that the curried functions return have new names too. For more
+information, see [Types](#types).
+
+## The `pointerParse` function replaces `pointerSegments`
+
+`pointerParse` returns an array instead of a generator. It throws for an
+invalid pointer when you call it, not when you start iterating:
 
 ```typescript
 // v1
 [...JsonPointer.pointerSegments("/foo/a~1b")]; // ["foo", "a/b"]
 
 // v2
-JsonPointer.parse("/foo/a~1b"); // ["foo", "a/b"]
+pointerParse("/foo/a~1b"); // ["foo", "a/b"]
 ```
 
-Every function also accepts segments in place of a pointer, and `stringify`
-turns segments back into a pointer. For more information, see
-[Segments](pointers.md#segments).
+Every function also accepts segments in place of a pointer, and
+`pointerStringify` turns segments back into a pointer. For more
+information, see [Segments](pointers.md#segments).
 
 ## Errors are classes
 
@@ -56,36 +88,43 @@ that you add to an array. v2 throws instead. For more information, see
 
 ## Curried functions check the pointer right away
 
-When you give `set`, `assign`, `unset`, or `remove` only a pointer, they
-parse it right away, like `get` always did. An invalid pointer throws where
-you wrote it, not later when you use the returned function:
+When you give `pointerSet`, `pointerAssign`, `pointerUnset`, or
+`pointerRemove` only a pointer, they parse it right away, like v1's `get`
+always did. An invalid pointer throws where you wrote it, not later when
+you use the returned function:
 
 ```typescript
-const setName = JsonPointer.set("name"); // throws in v2
+const setName = pointerSet("name"); // throws in v2
 ```
 
 How many arguments you give a function decides whether it returns a
 function. v1 checked whether the subject was `undefined`, so
-`get(pointer, undefined)` returned a function. In v2, that's a call with an
-`undefined` subject, so it throws a `NotAContainerError`. If a subject
-might be `undefined`, check it before you call the function.
+`get(pointer, undefined)` returned a function. In v2,
+`pointerGet(pointer, undefined)` is a call with an `undefined` subject, so
+it throws a `NotAContainerError`. If a subject might be `undefined`, check
+it before you call the function.
 
-## The `unset` function returns the subject when there's nothing to remove
+## The `pointerUnset` function returns the subject when there's nothing to remove
 
-v1 always returned a copy. v2 returns `subject` itself when the value isn't
-there, so you can use `===` to tell whether anything changed.
+v1's `unset` always returned a copy. v2 returns `subject` itself when the
+value isn't there, so you can use `===` to tell whether anything changed.
 
 ## Types
 
 The types changed in the following ways:
 
-- `set` and `unset` return a value with the subject's type instead of
-  `Json`, so you can read properties off the result without a cast. For
-  more information, see [TypeScript](change-values.md#typescript).
-- `get`, `set`, and `unset` accept readonly values, like ones declared
-  `as const`. For more information, see
+- The types for the curried functions have new names: `Getter`,
+  `Setter`, `Assigner`, `Unsetter`, and `Remover` are now
+  `PointerGetter`, `PointerSetter`, `PointerAssigner`, `PointerUnsetter`,
+  and `PointerRemover`.
+- `pointerSet` and `pointerUnset` return a value with the subject's type
+  instead of `Json`, so you can read properties off the result without a
+  cast. For more information, see
+  [TypeScript](change-values.md#typescript).
+- `pointerGet`, `pointerSet`, and `pointerUnset` accept readonly values,
+  like ones declared `as const`. For more information, see
   [Readonly values](install.md#readonly-values).
-- `Getter`, `Setter`, and `Unsetter` are generic in v2, so they return
-  readonly values for readonly subjects. Code that annotates a variable
-  with them keeps working.
-- `Pointer`, `Segments`, `ReadonlyJson`, and `ReadonlyJsonObject` are new.
+- `PointerGetter`, `PointerSetter`, and `PointerUnsetter` are generic, so
+  they return readonly values for readonly subjects.
+- `Pointer`, `PointerSegments`, `ReadonlyJson`, and `ReadonlyJsonObject`
+  are new.

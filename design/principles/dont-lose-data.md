@@ -6,7 +6,7 @@ instead.
 
 - A segment applied to an array has to be an index or `-`. JavaScript
   allows `arr.foo = 1`, but `JSON.stringify` doesn't write `foo`, so
-  `set("/foo", arr, 1)` throws. RFC 6901 calls it an error too (see
+  `pointerSet("/foo", arr, 1)` throws. RFC 6901 calls it an error too (see
   [Pointers](../components/pointers.md#array-indexes)).
 - Only own properties are found, not inherited ones. An array's `length`
   is an own property, but it isn't an index, so `/length` on an array

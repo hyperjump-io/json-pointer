@@ -6,12 +6,12 @@ following table shows the function for each:
 
 | Change | Returns a new value | Changes the value in place |
 | --- | --- | --- |
-| Set a value | `set(pointer, subject, value)` | `assign(pointer, subject, value)` |
-| Remove a value | `unset(pointer, subject)` | `remove(pointer, subject)` |
+| Set a value | `pointerSet(pointer, subject, value)` | `pointerAssign(pointer, subject, value)` |
+| Remove a value | `pointerUnset(pointer, subject)` | `pointerRemove(pointer, subject)` |
 
 ## Set a value
 
-`set` returns a new value with the value set, and doesn't change
+`pointerSet` returns a new value with the value set, and doesn't change
 `subject`:
 
 ```typescript
@@ -21,13 +21,13 @@ const doc = {
   languages: ["English", "French"]
 };
 
-const moved = JsonPointer.set("/address/city", doc, "Paris");
+const moved = pointerSet("/address/city", doc, "Paris");
 moved.address.city; // "Paris"
 doc.address.city; // "London"
 ```
 
-`set` copies only the objects and arrays on the way to the value. The new
-value shares everything else with `subject`:
+`pointerSet` copies only the objects and arrays on the way to the value.
+The new value shares everything else with `subject`:
 
 ```typescript
 moved === doc; // false
@@ -35,14 +35,14 @@ moved.address === doc.address; // false
 moved.languages === doc.languages; // true
 ```
 
-That makes `set` cheap, even for large documents. It also means that you
-should change the new value with `set` too, not in place. Otherwise, you
-might change `subject` through a shared part.
+That makes `pointerSet` cheap, even for large documents. It also means that
+you should change the new value with `pointerSet` too, not in place.
+Otherwise, you might change `subject` through a shared part.
 
-`assign` sets the value in place and returns nothing:
+`pointerAssign` sets the value in place and returns nothing:
 
 ```typescript
-JsonPointer.assign("/address/city", doc, "Paris");
+pointerAssign("/address/city", doc, "Paris");
 doc.address.city; // "Paris"
 ```
 
@@ -52,25 +52,26 @@ so `/phone/home` throws if there's no `/phone`.
 
 ## Remove a value
 
-`unset` returns a new value with the value removed, and doesn't change
-`subject`. Like `set`, it copies only what's on the way to the value:
+`pointerUnset` returns a new value with the value removed, and doesn't
+change `subject`. Like `pointerSet`, it copies only what's on the way to
+the value:
 
 ```typescript
-const unlisted = JsonPointer.unset("/address", doc);
+const unlisted = pointerUnset("/address", doc);
 "address" in unlisted; // false
 "address" in doc; // true
 ```
 
-`remove` removes the value in place and returns nothing:
+`pointerRemove` removes the value in place and returns nothing:
 
 ```typescript
-JsonPointer.remove("/address", doc);
+pointerRemove("/address", doc);
 "address" in doc; // false
 ```
 
-If the value isn't there, `unset` returns `subject` itself, and `remove`
-does nothing. If the object or array that would hold the value isn't
-there, both functions throw, like `get` does.
+If the value isn't there, `pointerUnset` returns `subject` itself, and
+`pointerRemove` does nothing. If the object or array that would hold the
+value isn't there, both functions throw, like `pointerGet` does.
 
 ## Arrays
 
@@ -79,7 +80,7 @@ that item. The segment `-` is the position after the last item, so setting
 it adds an item to the end:
 
 ```typescript
-const more = JsonPointer.set("/languages/-", doc, "Greek");
+const more = pointerSet("/languages/-", doc, "Greek");
 more.languages; // ["English", "French", "Greek"]
 ```
 
@@ -92,7 +93,7 @@ length, with an empty slot where the item was. `JSON.stringify` writes an
 empty slot as `null`:
 
 ```typescript
-const fewer = JsonPointer.unset("/languages/0", doc);
+const fewer = pointerUnset("/languages/0", doc);
 fewer.languages.length; // 2
 JSON.stringify(fewer.languages); // '[null,"French"]'
 ```
@@ -101,8 +102,8 @@ To take an item out and shift the rest down, set the array to a copy
 without the item:
 
 ```typescript
-const languages = JsonPointer.get("/languages", doc) as string[];
-const shifted = JsonPointer.set(
+const languages = pointerGet("/languages", doc) as string[];
+const shifted = pointerSet(
   "/languages",
   doc,
   languages.toSpliced(0, 1)
@@ -112,29 +113,30 @@ shifted.languages; // ["French"]
 
 ## The whole document
 
-The empty pointer `""` is the whole document. With it, `set` returns
-`value`, and `unset` returns `undefined`. A value can't replace itself in
-place, so `assign` and `remove` do nothing with the empty pointer.
+The empty pointer `""` is the whole document. With it, `pointerSet` returns
+`value`, and `pointerUnset` returns `undefined`. A value can't replace
+itself in place, so `pointerAssign` and `pointerRemove` do nothing with the
+empty pointer.
 
 ## TypeScript
 
-`set` and `unset` return a value with `subject`'s type. A pointer is only a
-string, so TypeScript can't know what it points to. The return type assumes
-that `value` has the same type as what it replaces. If it doesn't, cast the
-result. `get` returns a `Json`, so cast what it returns too, like
-`languages` in the last example in [Arrays](#arrays).
+`pointerSet` and `pointerUnset` return a value with `subject`'s type. A
+pointer is only a string, so TypeScript can't know what it points to. The
+return type assumes that `value` has the same type as what it replaces. If
+it doesn't, cast the result. `pointerGet` returns a `Json`, so cast what it
+returns too, like `languages` in the last example in [Arrays](#arrays).
 
-With the empty pointer, `set` returns `value`'s type, and `unset` returns
-`undefined`.
+With the empty pointer, `pointerSet` returns `value`'s type, and
+`pointerUnset` returns `undefined`.
 
 ## Apply a pointer many times
 
-Like `get`, each function can take only a pointer. It returns a function
-that takes the rest of the arguments, and parses the pointer once, when you
-first pass it in:
+Like `pointerGet`, each function can take only a pointer. It returns a
+function that takes the rest of the arguments, and parses the pointer once,
+when you first pass it in:
 
 ```typescript
-const addLanguage = JsonPointer.set("/languages/-");
+const addLanguage = pointerSet("/languages/-");
 
 const ada = { languages: ["English"] };
 addLanguage(ada, "French").languages; // ["English", "French"]
@@ -147,5 +149,5 @@ These functions throw the following errors:
 | Error | When |
 | --- | --- |
 | `InvalidPointerError` | The pointer isn't valid. If you pass only a pointer, the function throws it right away, before there's a subject. For more information, see [Invalid pointers](pointers.md#invalid-pointers). |
-| `NotAContainerError` | A segment before the last doesn't lead to an object or an array. Like the error from `get`, it says where the function stopped. For more information, see [Errors](get-values.md#errors) in Get values. |
+| `NotAContainerError` | A segment before the last doesn't lead to an object or an array. Like the error from `pointerGet`, it says where the function stopped. For more information, see [Errors](get-values.md#errors) in Get values. |
 | `InvalidIndexError` | A segment that steps into an array isn't an index or `-` |

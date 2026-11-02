@@ -32,12 +32,13 @@ hand and have JSDoc explaining the details. Documentation for users is in
 
 ## Components
 
+- [Naming](components/naming.md): why every name starts with `pointer`
 - [Pointers](components/pointers.md): parsing, validating, escaping, and
   building pointers
 - [Currying](components/currying.md): applying a pointer many times
-- [Getting values](components/getting-values.md): `get`
-- [Changing values](components/changing-values.md): `set`, `assign`,
-  `unset`, and `remove`
+- [Getting values](components/getting-values.md): `pointerGet`
+- [Changing values](components/changing-values.md): `pointerSet`,
+  `pointerAssign`, `pointerUnset`, and `pointerRemove`
 - [Errors](components/errors.md)
 - [Types](components/types.md): readonly subjects
 - [What changed from v1](components/v1.md)

@@ -9,26 +9,27 @@ builds and splits pointers, so you never have to escape them by hand.
 The following example gets a value, and then sets a new one:
 
 ```typescript
-import * as JsonPointer from "@hyperjump/json-pointer";
+import { pointerGet, pointerSet } from "@hyperjump/json-pointer";
 
 const doc = { foo: { bar: 42 } };
 
-JsonPointer.get("/foo/bar", doc); // 42
+pointerGet("/foo/bar", doc); // 42
 
-const updated = JsonPointer.set("/foo/bar", doc, 33);
+const updated = pointerSet("/foo/bar", doc, 33);
 updated.foo.bar; // 33
 doc.foo.bar; // 42
 ```
 
 The package offers the following:
 
-- **Immutable or in place.** `set` and `unset` return a new value and leave
-  the original alone. `assign` and `remove` change it in place.
+- **Immutable or in place.** `pointerSet` and `pointerUnset` return a new
+  value and leave the original alone. `pointerAssign` and `pointerRemove`
+  change it in place.
 - **Parse once, apply many times.** Give a function only a pointer, and it
   returns a function that you can apply to any number of documents.
-- **Escaping handled.** `append`, `parse`, and `stringify` escape and
-  unescape `~` and `/` for you. Every function accepts segments as well as
-  pointers.
+- **Escaping handled.** `pointerAppend`, `pointerParse`, and
+  `pointerStringify` escape and unescape `~` and `/` for you. Every
+  function accepts segments as well as pointers.
 - **Small.** No dependencies. It has TypeScript types and works in Node.js
   and browsers.
 
@@ -46,9 +47,9 @@ For what changed in v2, see [Migrate from v1](migrate-from-v1.md).
 - [Install](install.md): setup for Node.js, browsers, and TypeScript
 - [Pointers](pointers.md): how to write and build pointers, and pointers in
   URIs
-- [Get values](get-values.md): `get`, and what it returns when a value
-  isn't there
-- [Change values](change-values.md): `set`, `assign`, `unset`, and
-  `remove`
+- [Get values](get-values.md): `pointerGet`, and what it returns when a
+  value isn't there
+- [Change values](change-values.md): `pointerSet`, `pointerAssign`,
+  `pointerUnset`, and `pointerRemove`
 - [Migrate from v1](migrate-from-v1.md): what changed, and what to do
   about it

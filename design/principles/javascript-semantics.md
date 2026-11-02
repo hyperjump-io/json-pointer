@@ -1,8 +1,8 @@
 # Do what JavaScript does
 
 An operation by pointer does what the same operation written in JavaScript
-does to a value that came from `JSON.parse`. `set("/a/0", doc, 1)` is
-`doc.a[0] = 1`, without changing `doc`. Someone who knows JavaScript can
+does to a value that came from `JSON.parse`. `pointerSet("/a/0", doc, 1)`
+is `doc.a[0] = 1`, without changing `doc`. Someone who knows JavaScript can
 predict what happens without reading the docs.
 
 - Removing an array item leaves a hole, like `delete arr[0]`. It doesn't

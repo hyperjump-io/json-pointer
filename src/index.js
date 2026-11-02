@@ -5,11 +5,8 @@
 /** The largest array index in JavaScript. A larger number is an ordinary property. */
 const MAX_INDEX = 2 ** 32 - 2;
 
-/** @type typeof API.nil */
-export const nil = "";
-
-/** @type typeof API.parse */
-export const parse = (pointer) => {
+/** @type typeof API.pointerParse */
+export const pointerParse = (pointer) => {
   if (pointer.length > 0 && !pointer.startsWith("/")) {
     throw new InvalidPointerError(pointer);
   }
@@ -37,19 +34,19 @@ export const parse = (pointer) => {
   return segments;
 };
 
-/** @type typeof API.stringify */
-export const stringify = (segments) => {
+/** @type typeof API.pointerStringify */
+export const pointerStringify = (segments) => {
   /** @type string */
-  let pointer = nil;
+  let pointer = "";
   for (const segment of segments) {
-    pointer = append(segment, pointer);
+    pointer = pointerAppend(segment, pointer);
   }
 
   return pointer;
 };
 
-/** @type typeof API.append */
-export const append = (segment, pointer) => pointer + "/" + escape(segment);
+/** @type typeof API.pointerAppend */
+export const pointerAppend = (segment, pointer) => pointer + "/" + escape(segment);
 
 // Each function is curried when it's given only a pointer. It's told by the number of arguments, not by whether
 // subject is undefined, so a subject that's missing by mistake throws instead of returning a function.
@@ -58,7 +55,7 @@ export const append = (segment, pointer) => pointer + "/" + escape(segment);
  * @param {API.Pointer} pointer
  * @param {API.Json} [subject]
  */
-export const get = function (pointer, subject) {
+export const pointerGet = function (pointer, subject) {
   const segments = toSegments(pointer);
   if (arguments.length === 1) {
     return (/** @type API.Json */ subject) => _get(segments, subject);
@@ -72,7 +69,7 @@ export const get = function (pointer, subject) {
  * @param {API.Json} [subject]
  * @param {API.Json} [value]
  */
-export const set = function (pointer, subject, value) {
+export const pointerSet = function (pointer, subject, value) {
   const segments = toSegments(pointer);
   if (arguments.length === 1) {
     return (/** @type API.Json */ subject, /** @type API.Json */ value) => _set(segments, subject, value);
@@ -86,7 +83,7 @@ export const set = function (pointer, subject, value) {
  * @param {API.Json} [subject]
  * @param {API.Json} [value]
  */
-export const assign = function (pointer, subject, value) {
+export const pointerAssign = function (pointer, subject, value) {
   const segments = toSegments(pointer);
   if (arguments.length === 1) {
     return (/** @type API.Json */ subject, /** @type API.Json */ value) => _assign(segments, subject, value);
@@ -99,7 +96,7 @@ export const assign = function (pointer, subject, value) {
  * @param {API.Pointer} pointer
  * @param {API.Json} [subject]
  */
-export const unset = function (pointer, subject) {
+export const pointerUnset = function (pointer, subject) {
   const segments = toSegments(pointer);
   if (arguments.length === 1) {
     return (/** @type API.Json */ subject) => _unset(segments, subject);
@@ -112,7 +109,7 @@ export const unset = function (pointer, subject) {
  * @param {API.Pointer} pointer
  * @param {API.Json} [subject]
  */
-export const remove = function (pointer, subject) {
+export const pointerRemove = function (pointer, subject) {
   const segments = toSegments(pointer);
   if (arguments.length === 1) {
     return (/** @type API.Json */ subject) => _remove(segments, subject);
@@ -175,10 +172,10 @@ export class InvalidIndexError extends TypeError {
   }
 }
 
-/** @type (pointer: API.Pointer) => API.Segments */
-const toSegments = (pointer) => typeof pointer === "string" ? parse(pointer) : pointer;
+/** @type (pointer: API.Pointer) => API.PointerSegments */
+const toSegments = (pointer) => typeof pointer === "string" ? pointerParse(pointer) : pointer;
 
-/** @type (segments: API.Segments, subject: API.Json | undefined) => API.Json | undefined */
+/** @type (segments: API.PointerSegments, subject: API.Json | undefined) => API.Json | undefined */
 const _get = (segments, subject) => {
   for (let index = 0; index < segments.length; index++) {
     subject = child(segments, index, container(segments, index, subject));
@@ -190,7 +187,7 @@ const _get = (segments, subject) => {
 /**
  * `value` is undefined only when it's left out, which sets `undefined`, like JavaScript does.
  *
- * @type (segments: API.Segments, subject: API.Json | undefined, value: API.Json | undefined, index?: number) => API.Json | undefined
+ * @type (segments: API.PointerSegments, subject: API.Json | undefined, value: API.Json | undefined, index?: number) => API.Json | undefined
  */
 const _set = (segments, subject, value, index = 0) => {
   if (index === segments.length) {
@@ -205,7 +202,7 @@ const _set = (segments, subject, value, index = 0) => {
   return copy;
 };
 
-/** @type (segments: API.Segments, subject: API.Json | undefined, value: API.Json | undefined) => void */
+/** @type (segments: API.PointerSegments, subject: API.Json | undefined, value: API.Json | undefined) => void */
 const _assign = (segments, subject, value) => {
   if (segments.length === 0) {
     return;
@@ -218,7 +215,7 @@ const _assign = (segments, subject, value) => {
 /**
  * Returns `subject` itself when there's nothing to remove, so callers can tell nothing changed with `===`.
  *
- * @type (segments: API.Segments, subject: API.Json | undefined, index?: number) => API.Json | undefined
+ * @type (segments: API.PointerSegments, subject: API.Json | undefined, index?: number) => API.Json | undefined
  */
 const _unset = (segments, subject, index = 0) => {
   if (segments.length === 0) {
@@ -249,7 +246,7 @@ const _unset = (segments, subject, index = 0) => {
   return copy;
 };
 
-/** @type (segments: API.Segments, subject: API.Json | undefined) => void */
+/** @type (segments: API.PointerSegments, subject: API.Json | undefined) => void */
 const _remove = (segments, subject) => {
   if (segments.length === 0) {
     return;
@@ -265,7 +262,7 @@ const _remove = (segments, subject) => {
 /**
  * The object or array the last segment applies to.
  *
- * @type (segments: API.Segments, subject: API.Json | undefined) => Container
+ * @type (segments: API.PointerSegments, subject: API.Json | undefined) => Container
  */
 const walkToParent = (segments, subject) => {
   const last = segments.length - 1;
@@ -279,7 +276,7 @@ const walkToParent = (segments, subject) => {
 /**
  * The value the segment at `index` names in `parent`, if it's there.
  *
- * @type (segments: API.Segments, index: number, parent: Container) => API.Json | undefined
+ * @type (segments: API.PointerSegments, index: number, parent: Container) => API.Json | undefined
  */
 const child = (segments, index, parent) => {
   const key = keyOf(segments, index, parent);
@@ -289,11 +286,11 @@ const child = (segments, index, parent) => {
 /**
  * Throws if the segment at `index` can't be applied to `value` because it isn't an object or an array.
  *
- * @type (segments: API.Segments, index: number, value: API.Json | undefined) => Container
+ * @type (segments: API.PointerSegments, index: number, value: API.Json | undefined) => Container
  */
 const container = (segments, index, value) => {
   if (typeof value !== "object" || value === null) {
-    throw new NotAContainerError(stringify(segments), stringify(segments.slice(0, index)), segments[index], value);
+    throw new NotAContainerError(pointerStringify(segments), pointerStringify(segments.slice(0, index)), segments[index], value);
   }
 
   return value;
@@ -303,7 +300,7 @@ const container = (segments, index, value) => {
  * The key the segment at `index` names in `parent`. In an array, it has to be an index or `-`, which is the
  * position after the last item.
  *
- * @type (segments: API.Segments, index: number, parent: Container) => string | number
+ * @type (segments: API.PointerSegments, index: number, parent: Container) => string | number
  */
 const keyOf = (segments, index, parent) => {
   const segment = segments[index];
@@ -314,7 +311,7 @@ const keyOf = (segments, index, parent) => {
   } else if (isIndex(segment)) {
     return Number(segment);
   } else {
-    throw new InvalidIndexError(stringify(segments), stringify(segments.slice(0, index)), segment);
+    throw new InvalidIndexError(pointerStringify(segments), pointerStringify(segments.slice(0, index)), segment);
   }
 };
 

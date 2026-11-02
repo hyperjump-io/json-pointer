@@ -26,38 +26,37 @@ The following table shows the value that each pointer identifies in it:
 | `/a~1b` | `1` |
 | `/m~0n` | `2` |
 
-The empty pointer `""` is the whole document. The package exports it as
-`nil`, to use as the starting point when you
-[build pointers](#build-pointers).
+The empty pointer `""` is the whole document. It's also the starting
+point when you [build pointers](#build-pointers).
 
 ## Escape sequences
 
-A `/` in a property name would read as the start of another segment, so
-you write it as `~1`. That makes `~` special too, so you write a `~` in a
-property name as `~0`. `append`, `parse`, and `stringify` escape and
-unescape for you. You see escapes only in pointers that someone wrote by
-hand.
+A `/` in a property name would read as the start of another segment, so you
+write it as `~1`. That makes `~` special too, so you write a `~` in a
+property name as `~0`. `pointerAppend`, `pointerParse`, and
+`pointerStringify` escape and unescape for you. You see escapes only in
+pointers that someone wrote by hand.
 
 ## Build pointers
 
-`append(segment, pointer)` escapes a segment and adds it to the end of a
-pointer. The segment comes first, then the pointer to add it to:
+`pointerAppend(segment, pointer)` escapes a segment and adds it to the end
+of a pointer. The segment comes first, then the pointer to add it to:
 
 ```typescript
-const foo = JsonPointer.append("foo", JsonPointer.nil); // "/foo"
-const item = JsonPointer.append("0", foo); // "/foo/0"
-JsonPointer.append("a/b", JsonPointer.nil); // "/a~1b"
+const foo = pointerAppend("foo", ""); // "/foo"
+const item = pointerAppend("0", foo); // "/foo/0"
+pointerAppend("a/b", ""); // "/a~1b"
 ```
 
 ## Segments
 
-`parse(pointer)` splits a pointer into unescaped segments.
-`stringify(segments)` escapes them back into a pointer:
+`pointerParse(pointer)` splits a pointer into unescaped segments.
+`pointerStringify(segments)` escapes them back into a pointer:
 
 ```typescript
-JsonPointer.parse("/foo/a~1b/0"); // ["foo", "a/b", "0"]
-JsonPointer.parse(JsonPointer.nil); // []
-JsonPointer.stringify(["foo", "a/b", "0"]); // "/foo/a~1b/0"
+pointerParse("/foo/a~1b/0"); // ["foo", "a/b", "0"]
+pointerParse(""); // []
+pointerStringify(["foo", "a/b", "0"]); // "/foo/a~1b/0"
 ```
 
 Segments are always strings, including array indexes.
@@ -67,7 +66,7 @@ pointers from parts, keep them as segments. That way, the package never
 has to escape them and parse them again:
 
 ```typescript
-JsonPointer.get(["foo", "0"], doc); // same as get("/foo/0", doc)
+pointerGet(["foo", "0"], doc); // same as pointerGet("/foo/0", doc)
 ```
 
 ## Invalid pointers
@@ -81,8 +80,8 @@ The curried form throws when you give it the pointer. The error's
 For example, both of the following calls throw:
 
 ```typescript
-JsonPointer.get("foo", doc); // throws: no leading "/"
-JsonPointer.get("/a~b", doc); // throws: "~" must be "~0" or "~1"
+pointerGet("foo", doc); // throws: no leading "/"
+pointerGet("/a~b", doc); // throws: "~" must be "~0" or "~1"
 ```
 
 ## Pointers in URIs
@@ -96,7 +95,7 @@ before you use it:
 ```typescript
 const url = new URL("https://example.com/doc.json#/first%20name");
 const pointer = decodeURIComponent(url.hash.slice(1)); // "/first name"
-JsonPointer.get(pointer, doc);
+pointerGet(pointer, doc);
 ```
 
 When you put a pointer in a URI, percent-encode those characters.

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import * as JsonPointer from "./index.js";
+import { InvalidPointerError, pointerAppend, pointerParse, pointerStringify } from "./index.js";
 
 /** @type [string, string[]][] */
 const pointers = [
@@ -36,46 +36,40 @@ const invalidPointers = [
   "/~0~"
 ];
 
-describe("nil", () => {
-  test("is the empty pointer", () => {
-    expect(JsonPointer.nil).to.equal("");
-  });
-});
-
-describe("parse", () => {
+describe("pointerParse", () => {
   test.each(pointers)("%j is %j", (pointer, segments) => {
-    expect(JsonPointer.parse(pointer)).to.eql(segments);
+    expect(pointerParse(pointer)).to.eql(segments);
   });
 
   test.each(invalidPointers)("%j is invalid", (pointer) => {
-    expect(() => JsonPointer.parse(pointer)).to.throw(JsonPointer.InvalidPointerError);
+    expect(() => pointerParse(pointer)).to.throw(InvalidPointerError);
   });
 });
 
-describe("stringify", () => {
+describe("pointerStringify", () => {
   test.each(pointers)("%j is %j", (pointer, segments) => {
-    expect(JsonPointer.stringify(segments)).to.equal(pointer);
+    expect(pointerStringify(segments)).to.equal(pointer);
   });
 
   test("takes readonly segments", () => {
-    expect(JsonPointer.stringify(Object.freeze(["foo", "a/b"]))).to.equal("/foo/a~1b");
+    expect(pointerStringify(Object.freeze(["foo", "a/b"]))).to.equal("/foo/a~1b");
   });
 });
 
-describe("append", () => {
+describe("pointerAppend", () => {
   test("adds a segment to the end of a pointer", () => {
-    expect(JsonPointer.append("bar", "/foo")).to.equal("/foo/bar");
+    expect(pointerAppend("bar", "/foo")).to.equal("/foo/bar");
   });
 
-  test("adds a segment to the nil pointer", () => {
-    expect(JsonPointer.append("bar", JsonPointer.nil)).to.equal("/bar");
+  test("adds a segment to the empty pointer", () => {
+    expect(pointerAppend("bar", "")).to.equal("/bar");
   });
 
   test("adds an empty segment", () => {
-    expect(JsonPointer.append("", "/foo")).to.equal("/foo/");
+    expect(pointerAppend("", "/foo")).to.equal("/foo/");
   });
 
   test("escapes the segment", () => {
-    expect(JsonPointer.append("b~a/r", "/foo")).to.equal("/foo/b~0a~1r");
+    expect(pointerAppend("b~a/r", "/foo")).to.equal("/foo/b~0a~1r");
   });
 });
