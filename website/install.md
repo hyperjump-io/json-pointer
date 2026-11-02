@@ -27,7 +27,7 @@ The package exports the following types:
 
 | Type | Description |
 | --- | --- |
-| `Json` | Any JSON value: a string, number, boolean, `null`, object, or array |
+| `Json` | Any JSON value: a string, number, boolean, null, object, or array |
 | `JsonObject` | A JSON object |
 | `ReadonlyJson` | A readonly JSON value, like one declared `as const` |
 | `ReadonlyJsonObject` | A readonly JSON object |
