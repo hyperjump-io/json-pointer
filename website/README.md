@@ -1,6 +1,6 @@
 # JSON Pointer
 
-An implementation of
+`@hyperjump/json-pointer` is an implementation of
 [RFC 6901 JSON Pointer](https://www.rfc-editor.org/rfc/rfc6901). A JSON
 Pointer is a string like `/foo/0/bar` that identifies one value in a JSON
 document. This package gets, sets, and removes values by pointer. It also
