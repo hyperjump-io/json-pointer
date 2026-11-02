@@ -104,7 +104,7 @@ function. v1 checked whether the subject was `undefined`, so
 it throws a `NotAContainerError`. If a subject might be `undefined`, check
 it before you call the function.
 
-## The `pointerUnset` function returns the subject when there's nothing to remove
+## Unsetting a missing value returns the subject
 
 v1's `unset` always returned a copy. v2 returns `subject` itself when the
 value isn't there, so you can use `===` to tell whether anything changed.
