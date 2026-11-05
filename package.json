@@ -21,6 +21,9 @@
   ],
   "author": "Jason Desrosiers <jdesrosi@gmail.com>",
   "license": "MIT",
+  "publishConfig": {
+    "tag": "latest-1"
+  },
   "funding": {
     "type": "github",
     "url": "https://github.com/sponsors/jdesrosiers"
