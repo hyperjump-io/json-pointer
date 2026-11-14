@@ -13,6 +13,11 @@
     "skipDefaultLibCheck": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    "types": ["node"]
+    "types": ["node"],
+    // Remove once @stylistic/eslint-plugin fixes its "types" paths
+    // (https://github.com/eslint-stylistic/eslint-stylistic/issues/1331).
+    "paths": {
+      "@stylistic/eslint-plugin": ["./node_modules/@stylistic/eslint-plugin/dist/dts/index.d.mts"]
+    }
   }
 }
