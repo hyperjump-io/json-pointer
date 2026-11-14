@@ -8,6 +8,7 @@
   ],
   "author": "Jason Desrosiers <jdesrosi@gmail.com>",
   "license": "MIT",
+  "homepage": "https://hyperjump.io/json-pointer/",
   "repository": "github:hyperjump-io/json-pointer",
   "funding": {
     "type": "github",
